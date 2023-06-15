@@ -1,0 +1,24 @@
+{
+  "name": "trainee-test-project",
+  "version": "1.0.0",
+  "description": "MERN Test Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isalmanahmed/Trainee-Test-Project.git"
+  },
+  "author": "Salman Ahmed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/isalmanahmed/Trainee-Test-Project/issues"
+  },
+  "homepage": "https://github.com/isalmanahmed/Trainee-Test-Project#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22"
+  }
+}
