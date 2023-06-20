@@ -10,30 +10,32 @@ import Loader from "./components/Loader";
 function App() {
   const [showLogin, setShowLogin] = useState(true);
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(true);
 
   useEffect(() => {
     const getAuth = async (token) => {
       if (token) {
         try {
+          const _id = localStorage.getItem("_id");
           const response = await axios.post(
-            "http://localhost:3001/api/v1/fetchSurvivorWithToken",
-            { token: token },
+            `http://localhost:3001/api/v1/fetchProfile/${_id}`,
+            { token },
             {
               headers: {
                 "Content-Type": "application/json",
               },
             }
           );
-          setAuth(response.data.data);
+          setAuth(response.data.survivor);
           navigate("/home");
         } catch (error) {}
       }
       setIsAuthenticating(false);
     };
-
-    getAuth(localStorage.getItem("token"));
+    if (!auth?.token) {
+      getAuth(localStorage.getItem("token"));
+    }
   }, []);
 
   return (

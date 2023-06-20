@@ -21,8 +21,8 @@ mongoose
 
 const authenticationController = require("./controllers/authenticationController");
 const inventoryController = require("./controllers/inventoryController");
-const globalController = require("./controllers/globalController");
+const survivorController = require("./controllers/survivorController");
 
-app.use("/", authenticationController, inventoryController, globalController);
+app.use("/", authenticationController, inventoryController, survivorController);
 
 app.listen(PORT);

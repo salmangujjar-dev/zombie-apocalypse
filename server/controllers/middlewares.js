@@ -1,4 +1,5 @@
 const { Survivors } = require("../models/survivors");
+const jwt = require("jsonwebtoken");
 
 const checkUsernameExists = async (req, res, next) => {
   req.body.survivorObj = JSON.parse(req.body.survivorObj);
@@ -12,4 +13,23 @@ const checkUsernameExists = async (req, res, next) => {
   }
 };
 
-module.exports = checkUsernameExists;
+const verifyToken = async (req, res, next) => {
+  const token = req.body.token;
+  if (token) {
+    try {
+      jwt.verify(token, "secretKey");
+      next();
+    } catch (err) {
+      res.status(401).json({
+        login: false,
+      });
+    }
+  } else {
+    res.status(201).json({
+      login: false,
+      data: "error",
+    });
+  }
+};
+
+module.exports = { checkUsernameExists, verifyToken };

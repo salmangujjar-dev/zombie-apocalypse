@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const pages = [
-  { name: "Home", path: "/" },
+  { name: "Home", path: "/home" },
   { name: "Trade", path: "/trade" },
 ];
 
@@ -40,6 +40,7 @@ const Navbar = () => {
       operation: function () {
         setAuth(null);
         localStorage.removeItem("token");
+        localStorage.removeItem("_id");
         handleCloseUserMenu();
       },
     },
@@ -163,7 +164,11 @@ const Navbar = () => {
               >
                 <Avatar
                   alt={auth?.name}
-                  src="/static/images/avatar/2.jpg"
+                  src={
+                    auth?.profile_image
+                      ? `data:image/*;base64,${auth?.profile_image}`
+                      : ""
+                  }
                 />
               </IconButton>
             </Tooltip>

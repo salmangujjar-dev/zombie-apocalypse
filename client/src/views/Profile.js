@@ -1,8 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import {
   Modal,
-  Box,
   Button,
   Stack,
   FormControl,
@@ -13,20 +12,19 @@ import {
   FormControlLabel,
   Radio,
   Grid,
+  Avatar,
   FormLabel,
-  InputAdornment,
   Typography,
 } from "@mui/material";
 import useAuth from "../hooks/useAuth";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Styles from "../styles/Styles";
+import axios from "axios";
 
 const Profile = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showError, setShowError] = useState(false);
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState(null);
-  const [uploadImageText, setUploadImageText] = useState("Choose Image");
+  const [previewImage, setPreviewImage] = useState();
   const [inventory, setInventory] = useState([]);
   const [gender, setGender] = useState("Male");
 
@@ -35,18 +33,16 @@ const Profile = () => {
   const username = useRef();
   const name = useRef();
   const age = useRef();
+  const longitude = useRef();
+  const latitude = useRef();
 
   const toggleOpen = () => {
     setOpen(!open);
   };
 
-  const togglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-
   const handleUploadImage = (event) => {
     setImage(event.target.files[0]);
-    setUploadImageText(event.target.files[0].name);
+    setPreviewImage(URL.createObjectURL(event.target.files[0]));
   };
 
   const handleGenderChange = (event) => {
@@ -61,9 +57,52 @@ const Profile = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventdefault();
+  const handleAvatarClick = () => {
+    const fileInput = document.getElementById("profilePicture");
+    fileInput.click();
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedResources = inventory.map(({ _id, item, quantity }) => ({
+        item: _id,
+        quantity,
+      }));
+
+      const updatedSurvivorObj = {
+        name: name.current.value,
+        age: age.current.value,
+        username: auth?.username,
+        gender,
+        last_location: {
+          longitude: longitude.current.value,
+          latitude: latitude.current.value,
+        },
+        resources: updatedResources,
+      };
+      const data = new FormData();
+      data.append("file", image);
+      data.append("updatedSurvivorObj", JSON.stringify(updatedSurvivorObj));
+      data.append("token", localStorage.getItem("token"));
+
+      await axios.put(
+        `http://localhost:3001/api/v1/updateSurvivor/${auth._id}`,
+        data
+      );
+      toast.info("Profile Updated!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    if (auth?.profile_image) {
+      setPreviewImage(`data:image/*;base64,${auth?.profile_image}`);
+    }
+    setInventory(auth.resources);
+  }, []);
 
   return (
     <>
@@ -74,14 +113,9 @@ const Profile = () => {
       />
       <Navbar />
       <Toolbar />
-      <Container
-        sx={{
-          justifyContent: "center",
-          display: "flex",
-        }}
-      >
+      <Container>
         <form
-          className="mt-4"
+          className="d-flex justify-content-center"
           onSubmit={handleSubmit}
         >
           <FormControl>
@@ -89,6 +123,28 @@ const Profile = () => {
               spacing={2}
               direction="column"
             >
+              <Avatar
+                alt={auth?.name}
+                className="mx-auto"
+                src={previewImage}
+                title="Upload Image"
+                sx={{
+                  width: 200,
+                  height: 200,
+                  cursor: "pointer",
+                  transition: "opacity 0.3s",
+                  "&:hover": {
+                    opacity: 0.7,
+                  },
+                }}
+                onClick={handleAvatarClick}
+              />
+              <input
+                type="file"
+                id="profilePicture"
+                style={{ display: "none" }}
+                onChange={handleUploadImage}
+              />
               <TextField
                 label="Name"
                 variant="outlined"
@@ -106,9 +162,9 @@ const Profile = () => {
                 type="text"
                 defaultValue={auth?.username}
                 inputRef={username}
-                error={showError}
                 required
                 autoComplete="on"
+                disabled
               />
               <TextField
                 label="Age"
@@ -120,6 +176,26 @@ const Profile = () => {
                 InputProps={{ inputProps: { min: 0 } }}
                 required
               />
+              <Stack direction="row">
+                <TextField
+                  label="Longitude"
+                  variant="outlined"
+                  name="longitude"
+                  type="number"
+                  defaultValue={auth?.last_location?.longitude}
+                  inputRef={longitude}
+                  required
+                />
+                <TextField
+                  label="Latitude"
+                  variant="outlined"
+                  name="latitude"
+                  type="number"
+                  defaultValue={auth?.last_location?.latitude}
+                  inputRef={latitude}
+                  required
+                />
+              </Stack>
               <RadioGroup
                 row
                 aria-labelledby="demo-radio-buttons-group-label"
@@ -147,7 +223,7 @@ const Profile = () => {
                 variant="contained"
                 onClick={toggleOpen}
               >
-                Add Inventory
+                Update Inventory
               </Button>
               <Modal
                 open={open}
@@ -155,7 +231,11 @@ const Profile = () => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
-                <Box sx={Styles.Modal}>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={Styles.Modal}
+                >
                   <Typography
                     id="modal-modal-title"
                     variant="h3"
@@ -163,35 +243,30 @@ const Profile = () => {
                   >
                     Items
                   </Typography>
-                  <Grid
-                    container
-                    spacing={2}
-                  >
-                    {auth?.resources?.map((item, index) => (
+                  {auth?.resources?.map((item, index) => (
+                    <Grid
+                      item
+                      xs={12}
+                      className="d-flex align-items-center"
+                      key={index}
+                    >
                       <Grid
                         item
-                        xs={12}
-                        className="d-flex align-items-center"
-                        key={index}
+                        xs={6}
                       >
-                        <Grid
-                          item
-                          xs={6}
-                        >
-                          {item.item}
-                        </Grid>
-                        <TextField
-                          type="number"
-                          label="Quantity"
-                          value={item.quantity}
-                          InputProps={{ inputProps: { min: 0 } }}
-                          onChange={(e) =>
-                            handleQuantityChange(index, e.target.value)
-                          }
-                        />
+                        {item.item}
                       </Grid>
-                    ))}
-                  </Grid>
+                      <TextField
+                        type="number"
+                        label="Quantity"
+                        value={item.quantity}
+                        InputProps={{ inputProps: { min: 0 } }}
+                        onChange={(e) =>
+                          handleQuantityChange(index, e.target.value)
+                        }
+                      />
+                    </Grid>
+                  ))}
                   <Button
                     variant="contained"
                     className="d-flex mt-4 mx-auto"
@@ -199,7 +274,7 @@ const Profile = () => {
                   >
                     Close
                   </Button>
-                </Box>
+                </Grid>
               </Modal>
               <Button
                 type="submit"
