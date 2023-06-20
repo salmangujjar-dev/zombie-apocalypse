@@ -90,7 +90,6 @@ const Login = ({ setShowLogin }) => {
         data
       );
 
-      console.log(response.data.message);
       toast.success(response.data.message);
 
       setTimeout(() => {
@@ -99,7 +98,6 @@ const Login = ({ setShowLogin }) => {
     } catch (err) {
       toast.error(err.response.data.message);
       setShowError(true);
-      console.log(err.response.data.message);
     }
   };
 
@@ -109,11 +107,8 @@ const Login = ({ setShowLogin }) => {
         const response = await axios.get(
           "http://localhost:3001/api/v1/getInventory"
         );
-        console.log(response.data.updatedInventory);
         setInventory(response.data.updatedInventory);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
 
     fetchData();

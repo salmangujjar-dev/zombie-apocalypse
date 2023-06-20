@@ -25,7 +25,6 @@ root.render(
               path="/"
               element={<App />}
             />
-            {/* Secure Route */}
             <Route element={<RequireAuth allowedRoles={roles} />}>
               <Route
                 path="/home"

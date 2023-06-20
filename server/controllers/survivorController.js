@@ -9,10 +9,7 @@ router.put(
   "/api/v1/updateSurvivor/:id",
   jsonParser,
   verifyToken,
-  async (req, res) => {
-    console.log(req.body);
-    console.log(req.headers);
-  }
+  async (req, res) => {}
 );
 
 router.get("/api/v1/getSurvivor", verifyToken, jsonParser);

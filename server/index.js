@@ -17,12 +17,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
-    console.log("Database connection established");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+  .catch((err) => {});
 
 const authenticationController = require("./controllers/authenticationController");
 const inventoryController = require("./controllers/inventoryController");
@@ -30,4 +25,4 @@ const globalController = require("./controllers/globalController");
 
 app.use("/", authenticationController, inventoryController, globalController);
 
-app.listen(PORT, () => console.log("listening on port " + PORT));
+app.listen(PORT);

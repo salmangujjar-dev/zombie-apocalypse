@@ -27,14 +27,11 @@ const RequireAuth = ({ allowedRoles }) => {
             }
           );
           setAuth(response.data.data);
-        } catch (error) {
-          console.log(error);
-        }
+        } catch (error) {}
       }
       setIsAuthenticating(false);
     };
     if (!auth.token) {
-      console.log("true");
       getAuth(auth.token);
     } else {
       setIsAuthenticating(false);
@@ -46,7 +43,7 @@ const RequireAuth = ({ allowedRoles }) => {
   }
 
   return allowedRoles.find((role) => auth?.role?.includes(role)) ? (
-    <Outlet /> /* Renders Child Routes */
+    <Outlet />
   ) : auth?.token ? (
     <h1>You are not authorized to view this page.</h1>
   ) : (

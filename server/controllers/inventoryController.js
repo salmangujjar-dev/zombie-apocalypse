@@ -12,7 +12,6 @@ router.post("/api/v1/addInventory", jsonParser, async (req, res) => {
     const insertedInventory = await newInventory.save();
     res.status(201).json({ insertedInventory });
   } catch (e) {
-    console.log(e);
     res.status(500).json({ message: e.message });
   }
 });
@@ -27,7 +26,6 @@ router.get("/api/v1/getInventory", jsonParser, async (req, res) => {
     });
     res.status(200).json({ updatedInventory });
   } catch (e) {
-    console.log(e);
     res.status(500).json({ message: e.message });
   }
 });

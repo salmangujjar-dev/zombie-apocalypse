@@ -17,12 +17,6 @@ router.post(
   async (req, res) => {
     profile_image = null;
     if (req.file) {
-      // const imagePath = path.resolve(
-      //   __dirname,
-      //   "../../uploads/" + req.file.filename
-      // );
-
-      // const imageData = fs.readFileSync(imagePath);
       profile_image = {
         fileName: req.file.filename,
         contentType: req.file.mimetype,
@@ -60,7 +54,6 @@ router.post("/api/v1/login", jsonParser, async (req, res) => {
       .status(200)
       .json({ ...body, token, message: "Logged in successfully!" });
   } catch (error) {
-    console.log(error);
     res.status(500);
   }
 });

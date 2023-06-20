@@ -28,9 +28,7 @@ function App() {
           );
           setAuth(response.data.data);
           navigate("/home");
-        } catch (error) {
-          console.log(error);
-        }
+        } catch (error) {}
       }
       setIsAuthenticating(false);
     };
@@ -38,7 +36,6 @@ function App() {
     getAuth(localStorage.getItem("token"));
   }, []);
 
-  console.log("App Component");
   return (
     <>
       {isAuthenticating ? (

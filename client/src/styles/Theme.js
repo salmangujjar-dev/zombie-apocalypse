@@ -42,7 +42,7 @@ export const theme = createTheme({
     MuiTypography: {
       variants: [
         {
-          props: { variant: "h5" } /* component props */,
+          props: { variant: "h5" },
 
           style: {
             color: "white",

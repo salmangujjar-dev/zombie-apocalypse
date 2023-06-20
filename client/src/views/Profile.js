@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Navbar from "../components/Navbar";
 import {
   Modal,
@@ -64,11 +64,6 @@ const Profile = () => {
   const handleSubmit = (e) => {
     e.preventdefault();
   };
-
-  useEffect(() => {
-    console.log(auth);
-  }, []);
-  console.log("Profile");
 
   return (
     <>

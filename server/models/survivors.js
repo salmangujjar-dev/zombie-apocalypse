@@ -32,7 +32,6 @@ const survivorSchema = new mongoose.Schema({
     type: String,
   },
   profile_image: {
-    // data: Buffer,
     fileName: String,
     contentType: String,
   },

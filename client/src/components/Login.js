@@ -56,7 +56,6 @@ const Login = ({ setShowLogin }) => {
         navigate("/home");
       }, 2000);
     } catch (err) {
-      console.log(err);
       const message = err.response.data.message;
       toast.error(message);
     }
