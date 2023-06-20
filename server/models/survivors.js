@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Inventories } = require("../models/inventories");
 const bcrypt = require("bcrypt");
 
 const survivorSchema = new mongoose.Schema({
@@ -27,15 +28,19 @@ const survivorSchema = new mongoose.Schema({
     longitude: { type: Number, required: true },
     latitude: { type: Number, required: true },
   },
+  role: {
+    type: String,
+  },
   profile_image: {
-    data: Buffer,
+    // data: Buffer,
+    fileName: String,
     contentType: String,
   },
-  inventory: [
+  resources: [
     {
       item: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "items",
+        ref: "Inventories",
         required: true,
       },
       quantity: {
@@ -51,13 +56,20 @@ const survivorSchema = new mongoose.Schema({
 });
 
 survivorSchema.pre("save", async function (next) {
-  const survivor = this;
+  const { password } = this;
 
-  const hash = await bcrypt.hash(this.password, 10);
+  const hash = await bcrypt.hash(password, 10);
 
   this.password = hash;
   next();
 });
+
+survivorSchema.methods.isValidPassword = async function (password) {
+  const survivor = this;
+  const compare = await bcrypt.compare(password, survivor.password);
+
+  return compare;
+};
 
 const Survivors = mongoose.model("survivors", survivorSchema);
 

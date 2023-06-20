@@ -2,42 +2,57 @@ import { Container } from "@mui/material";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import useAuth from "./hooks/useAuth";
+import axios from "axios";
+import Loader from "./components/Loader";
 
 function App() {
-  const [showLogin, setShowLogin] = useState(false);
-
-  console.log("render");
+  const [showLogin, setShowLogin] = useState(true);
+  const navigate = useNavigate();
+  const { setAuth } = useAuth();
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
 
   useEffect(() => {
-    console.log("Component will mount");
+    const getAuth = async (token) => {
+      if (token) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3001/api/v1/fetchSurvivorWithToken",
+            { token: token },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          setAuth(response.data.data);
+          navigate("/home");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      setIsAuthenticating(false);
+    };
+
+    getAuth(localStorage.getItem("token"));
   }, []);
 
+  console.log("App Component");
   return (
-    <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
-      {showLogin ? (
-        <Login setShowLogin={setShowLogin} />
+    <>
+      {isAuthenticating ? (
+        <Loader />
       ) : (
-        <Signup setShowLogin={setShowLogin} />
+        <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
+          {showLogin ? (
+            <Login setShowLogin={setShowLogin} />
+          ) : (
+            <Signup setShowLogin={setShowLogin} />
+          )}
+        </Container>
       )}
-
-      {/* <Stack
-        direction="column"
-        spacing={2}
-      >
-        <Button
-          variant="contained"
-          size="large"
-        >
-          Login
-        </Button>
-        <Button
-          variant="contained"
-          size="large"
-        >
-          Signup
-        </Button>
-      </Stack> */}
-    </Container>
+    </>
   );
 }
 

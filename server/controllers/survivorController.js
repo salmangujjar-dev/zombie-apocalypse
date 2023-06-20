@@ -1,44 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
 const bodyParser = require("body-parser");
-const { Survivors } = require("../models/survivors");
-const fs = require("fs");
-const path = require("path");
-const checkUsernameExists = require("./middlewares");
+const jwt = require("jsonwebtoken");
 
-const upload = multer({ dest: "uploads/" });
+const jsonParser = bodyParser.json();
 
-router.post(
-  "/api/v1/createSurvivor",
-  upload.single("file"),
-  checkUsernameExists,
+router.put(
+  "/api/v1/updateSurvivor/:id",
+  jsonParser,
+  verifyToken,
   async (req, res) => {
-    profile_image = null;
-    if (req.file) {
-      const imagePath = path.resolve(
-        __dirname,
-        "../../uploads/" + req.file.filename
-      );
-
-      const imageData = fs.readFileSync(imagePath);
-      profile_image = {
-        data: imageData,
-        contentType: req.file.mimetype,
-      };
-    }
-
-    survivorObj = req.body.survivorObj;
-
-    const newSurvivor = new Survivors({
-      ...survivorObj,
-      profile_image,
-    });
-    const insertedSurvivor = await newSurvivor.save();
-    return res
-      .status(201)
-      .json({ insertedSurvivor, message: "Survivor created successfully." });
+    console.log(req.body);
+    console.log(req.headers);
   }
 );
+
+router.get("/api/v1/getSurvivor", verifyToken, jsonParser);
 
 module.exports = router;

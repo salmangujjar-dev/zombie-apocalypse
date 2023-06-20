@@ -39,16 +39,17 @@ export const theme = createTheme({
         },
       },
     },
-    // MuiRadio: {
-    //   styleOverrides: {
-    //     root: {
-    //       color: yellow[700],
-    //       "&.Mui-checked": {
-    //         color: yellow[700],
-    //       },
-    //     },
-    //   },
-    // },
+    MuiTypography: {
+      variants: [
+        {
+          props: { variant: "h5" } /* component props */,
+
+          style: {
+            color: "white",
+          },
+        },
+      ],
+    },
     MuiToolbar: {
       styleOverrides: {
         customRoot: {
