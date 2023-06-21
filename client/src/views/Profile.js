@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import {
-  Modal,
   Button,
   Stack,
   FormControl,
@@ -11,21 +10,16 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Grid,
   Avatar,
   FormLabel,
-  Typography,
 } from "@mui/material";
 import useAuth from "../hooks/useAuth";
 import { toast, ToastContainer } from "react-toastify";
-import Styles from "../styles/Styles";
 import axios from "axios";
 
 const Profile = () => {
-  const [open, setOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState();
-  const [inventory, setInventory] = useState([]);
   const [gender, setGender] = useState("Male");
 
   const { auth } = useAuth();
@@ -36,10 +30,6 @@ const Profile = () => {
   const longitude = useRef();
   const latitude = useRef();
 
-  const toggleOpen = () => {
-    setOpen(!open);
-  };
-
   const handleUploadImage = (event) => {
     setImage(event.target.files[0]);
     setPreviewImage(URL.createObjectURL(event.target.files[0]));
@@ -47,14 +37,6 @@ const Profile = () => {
 
   const handleGenderChange = (event) => {
     setGender(event.target.value);
-  };
-
-  const handleQuantityChange = (index, value) => {
-    setInventory((prevItems) => {
-      const updatedItems = [...prevItems];
-      updatedItems[index].quantity = value;
-      return updatedItems;
-    });
   };
 
   const handleAvatarClick = () => {
@@ -65,11 +47,6 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const updatedResources = inventory.map(({ _id, item, quantity }) => ({
-        item: _id,
-        quantity,
-      }));
-
       const updatedSurvivorObj = {
         name: name.current.value,
         age: age.current.value,
@@ -79,7 +56,6 @@ const Profile = () => {
           longitude: longitude.current.value,
           latitude: latitude.current.value,
         },
-        resources: updatedResources,
       };
       const data = new FormData();
       data.append("file", image);
@@ -101,7 +77,6 @@ const Profile = () => {
     if (auth?.profile_image) {
       setPreviewImage(`data:image/*;base64,${auth?.profile_image}`);
     }
-    setInventory(auth.resources);
   }, []);
 
   return (
@@ -219,63 +194,6 @@ const Profile = () => {
                   label="Female"
                 />
               </RadioGroup>
-              <Button
-                variant="contained"
-                onClick={toggleOpen}
-              >
-                Update Inventory
-              </Button>
-              <Modal
-                open={open}
-                onClose={toggleOpen}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <Grid
-                  container
-                  spacing={2}
-                  sx={Styles.Modal}
-                >
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h3"
-                    component="h1"
-                  >
-                    Items
-                  </Typography>
-                  {auth?.resources?.map((item, index) => (
-                    <Grid
-                      item
-                      xs={12}
-                      className="d-flex align-items-center"
-                      key={index}
-                    >
-                      <Grid
-                        item
-                        xs={6}
-                      >
-                        {item.item}
-                      </Grid>
-                      <TextField
-                        type="number"
-                        label="Quantity"
-                        value={item.quantity}
-                        InputProps={{ inputProps: { min: 0 } }}
-                        onChange={(e) =>
-                          handleQuantityChange(index, e.target.value)
-                        }
-                      />
-                    </Grid>
-                  ))}
-                  <Button
-                    variant="contained"
-                    className="d-flex mt-4 mx-auto"
-                    onClick={toggleOpen}
-                  >
-                    Close
-                  </Button>
-                </Grid>
-              </Modal>
               <Button
                 type="submit"
                 variant="contained"

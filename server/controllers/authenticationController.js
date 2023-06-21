@@ -15,10 +15,7 @@ router.post(
   upload.single("file"),
   checkUsernameExists,
   async (req, res) => {
-    profile_image = null;
-    if (req.file) {
-      profile_image = req.file.buffer;
-    }
+    profile_image = req.file?.buffer || null;
 
     survivorObj = req.body.survivorObj;
     const newSurvivor = new Survivors({

@@ -14,26 +14,28 @@ router.put(
   upload.single("file"),
   verifyToken,
   async (req, res) => {
-    profile_image = null;
-    if (req.file) {
-      profile_image = req.file.buffer;
-    }
+    profile_image = req.file?.buffer || null;
 
     const survivorObject = {
       ...JSON.parse(req.body.updatedSurvivorObj),
-      profile_image,
+      ...(profile_image && { profile_image }),
     };
-    const updatedSurvivor = await Survivors.updateOne(
-      {
-        username: survivorObject.username,
-      },
-      {
-        $set: {
-          ...survivorObject,
+
+    try {
+      const updatedSurvivor = await Survivors.updateOne(
+        {
+          username: survivorObject.username,
         },
-      }
-    );
-    res.status(201).json({ updatedSurvivor });
+        {
+          $set: {
+            ...survivorObject,
+          },
+        }
+      );
+      res.status(201).json({ updatedSurvivor });
+    } catch (err) {
+      res.status(400).json({ updatedSurvivor });
+    }
   }
 );
 
@@ -62,7 +64,7 @@ router.post(
         survivor: body,
       });
     } else {
-      res.status(201).json({
+      res.status(400).json({
         login: false,
         message: "Something went wrong.",
       });
