@@ -58,6 +58,7 @@ router.post(
         quantity: resource.quantity,
       }));
       body.resources = modifiedResources;
+      body.token = req.body.token;
 
       res.status(200).json({
         login: true,

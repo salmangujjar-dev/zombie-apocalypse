@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "./Loader";
+import NotAuthorized from "./NotAuthorized";
 
 const RequireAuth = ({ allowedRoles }) => {
   const { auth, setAuth } = useAuth();
@@ -38,11 +39,10 @@ const RequireAuth = ({ allowedRoles }) => {
   if (isAuthenticating) {
     return <Loader />;
   }
-
   return allowedRoles.find((role) => auth?.role?.includes(role)) ? (
     <Outlet />
   ) : auth?.token ? (
-    <h1>You are not authorized to view this page.</h1>
+    <NotAuthorized />
   ) : (
     <Navigate
       to="/"
