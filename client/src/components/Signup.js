@@ -90,6 +90,8 @@ const Login = ({ setShowLogin }) => {
         role: "survivor",
         isInfected: false,
         resources: updatedResources,
+        reportCount: 0,
+        reportHistory: [],
       };
 
       const data = new FormData();

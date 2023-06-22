@@ -9,10 +9,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import SearchBar from "./SearchBar";
 
 const pages = [
   { name: "Home", path: "/home" },
@@ -143,6 +145,13 @@ const Navbar = () => {
               </Button>
             ))}
           </Box>
+          <Stack
+            spacing={2}
+            sx={{ width: 300 }}
+            mr={3}
+          >
+            <SearchBar />
+          </Stack>
           <Typography
             variant="h6"
             component="h3"
@@ -166,7 +175,7 @@ const Navbar = () => {
                   alt={auth?.name}
                   src={
                     auth?.profile_image
-                      ? `data:image/*;base64,${auth?.profile_image}`
+                      ? `data:image/*;base64,${auth.profile_image}`
                       : ""
                   }
                 />

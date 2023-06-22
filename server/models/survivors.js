@@ -51,6 +51,11 @@ const survivorSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  reportHistory: [String],
+  reportCount: {
+    type: Number,
+    required: true,
+  },
 });
 
 survivorSchema.pre("save", async function (next) {

@@ -44,13 +44,13 @@ router.post(
   jsonParser,
   verifyToken,
   async (req, res) => {
-    const _id = req.params.id;
-    const survivor = await Survivors.findOne({ _id }, { password: 0 }).populate(
-      "resources.item",
-      "item"
-    );
+    try {
+      const _id = req.params.id;
+      const survivor = await Survivors.findOne(
+        { _id },
+        { password: 0 }
+      ).populate("resources.item", "item");
 
-    if (survivor) {
       const body = survivor.toObject();
       const modifiedResources = body.resources.map((resource) => ({
         _id: resource.item._id,
@@ -64,9 +64,81 @@ router.post(
         login: true,
         survivor: body,
       });
-    } else {
+    } catch (e) {
       res.status(400).json({
         login: false,
+        message: "Survivor doesn't Exists.",
+      });
+    }
+  }
+);
+
+router.post(
+  "/api/v1/fetchSurvivors",
+  jsonParser,
+  verifyToken,
+  async (req, res) => {
+    try {
+      const { _id, input } = req.body;
+
+      const result = await Survivors.find(
+        {
+          name: { $regex: new RegExp(`^${input}`, "i") },
+          _id: { $ne: { _id } },
+          role: "survivor",
+        },
+        "_id name username profile_image"
+      ).limit(10);
+
+      const body = await result.map((item) => item.toObject());
+      res.status(200).json({ body });
+    } catch (err) {
+      res.status(400).json({
+        message: "Something went wrong.",
+      });
+    }
+  }
+);
+
+router.put(
+  "/api/v1/reportSurvivor",
+  jsonParser,
+  verifyToken,
+  async (req, res) => {
+    try {
+      const { victimId, targetId } = req.body;
+
+      let response = await Survivors.updateOne(
+        {
+          _id: targetId,
+          reportHistory: {
+            $nin: [victimId],
+          },
+          reportCount: { $lt: 5 },
+        },
+        {
+          $push: {
+            reportHistory: victimId,
+          },
+          $inc: {
+            reportCount: 1,
+          },
+        }
+      );
+
+      if (response.modifiedCount === 1) {
+        await Survivors.updateOne(
+          { _id: targetId, reportCount: 5 },
+          { $set: { isInfected: true } }
+        );
+        res.status(200).json({ message: "Reported survivor Successfully!" });
+      } else {
+        res
+          .status(400)
+          .json({ message: "You have already reported this survivor!" });
+      }
+    } catch (err) {
+      res.status(400).json({
         message: "Something went wrong.",
       });
     }

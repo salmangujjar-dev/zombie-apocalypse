@@ -40,6 +40,10 @@ root.render(
                 path="/trade"
                 element={<Trade />}
               />
+              <Route
+                path="/trade/:id"
+                element={<Trade />}
+              />
             </Route>
           </Routes>
         </AuthProvider>

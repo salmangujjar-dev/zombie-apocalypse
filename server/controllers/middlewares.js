@@ -25,7 +25,7 @@ const verifyToken = async (req, res, next) => {
       });
     }
   } else {
-    res.status(201).json({
+    res.status(400).json({
       login: false,
       data: "error",
     });
