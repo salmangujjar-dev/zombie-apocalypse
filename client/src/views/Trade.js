@@ -75,7 +75,7 @@ const Trade = () => {
     };
 
     id && fetchProfile();
-  }, []);
+  }, [id]);
 
   const Field = ({ label, value }) => (
     <Grid
