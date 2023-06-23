@@ -145,4 +145,94 @@ router.put(
   }
 );
 
+router.get("/api/v1/fetchReport", verifyToken, async (req, res) => {
+  try {
+    const totalCount = await Survivors.countDocuments({ role: "survivor" });
+    const infectedCount = await Survivors.countDocuments({
+      isInfected: true,
+      role: "survivor",
+    });
+    let avgItemQuantity = await Survivors.aggregate([
+      {
+        $match: {
+          role: "survivor",
+          isInfected: false,
+        },
+      },
+      {
+        $unwind: "$resources",
+      },
+      {
+        $lookup: {
+          from: "inventories",
+          localField: "resources.item",
+          foreignField: "_id",
+          as: "itemDetails",
+        },
+      },
+      { $unwind: "$itemDetails" },
+      {
+        $group: {
+          _id: "$resources.item",
+          itemDetails: { $first: "$itemDetails.item" },
+          average: { $avg: "$resources.quantity" },
+        },
+      },
+      { $project: { _id: 0 } },
+    ]);
+
+    let infectedPointLost = await Survivors.aggregate([
+      {
+        $match: {
+          role: "survivor",
+          isInfected: true,
+        },
+      },
+      {
+        $unwind: "$resources",
+      },
+      {
+        $lookup: {
+          from: "inventories",
+          localField: "resources.item",
+          foreignField: "_id",
+          as: "itemDetails",
+        },
+      },
+      { $unwind: "$itemDetails" },
+      {
+        $group: {
+          _id: "$resources.item",
+          itemDetails: { $first: "$itemDetails.item" },
+          quantity: { $sum: "$resources.quantity" },
+          points: { $first: "$itemDetails.points" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          itemDetails: 1,
+          pointLost: {
+            $multiply: ["$points", "$quantity"],
+          },
+        },
+      },
+    ]);
+
+    avgItemQuantity = avgItemQuantity.map((obj) => {
+      return Object.values(obj);
+    });
+
+    infectedPointLost = infectedPointLost.map((obj) => {
+      return Object.values(obj);
+    });
+
+    res
+      .status(200)
+      .json({ totalCount, infectedCount, avgItemQuantity, infectedPointLost });
+  } catch (err) {
+    res.status(400).json({ message: "Something went wrong." });
+  }
+});
+
 module.exports = router;

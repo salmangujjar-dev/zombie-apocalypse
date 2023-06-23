@@ -19,6 +19,7 @@ import SearchBar from "./SearchBar";
 const pages = [
   { name: "Home", path: "/home" },
   { name: "Trade", path: "/trade" },
+  { name: "Report", path: "/report" },
 ];
 
 const Title = "ProjectX";
@@ -65,6 +66,17 @@ const Navbar = () => {
 
   return (
     <AppBar position="static">
+      {auth?.isInfected && (
+        <span
+          style={{
+            backgroundColor: "red",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          You are Infected
+        </span>
+      )}
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography

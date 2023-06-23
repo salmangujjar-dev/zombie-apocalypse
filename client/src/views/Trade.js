@@ -6,6 +6,8 @@ import {
   Container,
   Toolbar,
   Button,
+  Modal,
+  Typography,
   Stack,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -14,12 +16,18 @@ import useAuth from "../hooks/useAuth";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../components/Loader";
+import Styles from "../styles/Styles";
 
 const Trade = () => {
+  const [open, setOpen] = useState(false);
   const [survivor, setSurvivor] = useState({});
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const { auth } = useAuth();
+
+  const toggleOpen = () => {
+    setOpen(!open);
+  };
 
   const handleReport = async () => {
     if (auth?.role !== "survivor") {
@@ -48,6 +56,11 @@ const Trade = () => {
     } catch (err) {
       toast.error(err.response.data.message);
     }
+  };
+
+  const handleTrade = async () => {
+    try {
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -166,22 +179,71 @@ const Trade = () => {
 
               <Button
                 variant="contained"
-                disabled={survivor?.isInfected}
+                onClick={toggleOpen}
+                disabled={survivor?.isInfected || auth?.isInfected}
               >
                 Trade
               </Button>
+              <Modal
+                open={open}
+                onClose={toggleOpen}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={Styles.Modal}>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h3"
+                    component="h1"
+                  >
+                    Items
+                  </Typography>
+
+                  <Button
+                    variant="contained"
+                    className="d-flex mt-4 mx-auto"
+                    onClick={() => {
+                      handleTrade();
+                    }}
+                  >
+                    Trade
+                  </Button>
+                </Box>
+              </Modal>
               <Button
                 variant="contained"
                 color="error"
                 onClick={handleReport}
-                disabled={survivor?.isInfected}
+                disabled={survivor?.isInfected || auth?.isInfected}
               >
                 Report
               </Button>
             </Stack>
           </Box>
         ) : (
-          <h1>Zero</h1>
+          <Box>
+            <Typography
+              variant="h2"
+              fontFamily="monospace"
+              fontWeight="bold"
+              textAlign="center"
+            >
+              Trade Requests
+            </Typography>
+            {auth?.tradeRequest ? (
+              ""
+            ) : (
+              <Typography
+                mt={5}
+                variant="h4"
+                fontFamily="monospace"
+                fontWeight="bold"
+                textAlign="center"
+              >
+                No Trade Request Found
+              </Typography>
+            )}
+          </Box>
         )}
       </Container>
     </>

@@ -14,7 +14,7 @@ const checkUsernameExists = async (req, res, next) => {
 };
 
 const verifyToken = async (req, res, next) => {
-  const token = req.body.token;
+  const token = req.body?.token || req.headers.token;
   if (token) {
     try {
       jwt.verify(token, "secretKey");

@@ -27,6 +27,7 @@
 - styled-components
 - react-router-dom
 - react-toastify
+- react-google-charts
 
 `cd client && npm install axios @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/styled-engine-sc styled-components react-router-dom react-toastify`
 

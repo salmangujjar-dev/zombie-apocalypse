@@ -57,6 +57,8 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (auth?.isInfected) {
+    }
     setLoading(true);
     try {
       const updatedSurvivorObj = {
@@ -65,12 +67,16 @@ const Profile = () => {
         username: auth?.username,
         gender,
         last_location: {
-          longitude: longitude.current.value,
-          latitude: latitude.current.value,
+          longitude: auth?.isInfected
+            ? auth?.last_location.longitude
+            : longitude.current.value,
+          latitude: auth?.isInfected
+            ? auth?.last_location.latitude
+            : latitude.current.value,
         },
       };
       const data = new FormData();
-      data.append("file", image);
+      !auth?.isInfected && data.append("file", image);
       data.append("updatedSurvivorObj", JSON.stringify(updatedSurvivorObj));
       data.append("token", localStorage.getItem("token"));
 
@@ -122,7 +128,7 @@ const Profile = () => {
                     alt={auth?.name}
                     className="mx-auto"
                     src={previewImage}
-                    title="Upload Image"
+                    title={auth?.isInfected ? "Image Locked" : "Upload Image"}
                     sx={{
                       width: 200,
                       height: 200,
@@ -139,6 +145,7 @@ const Profile = () => {
                     id="profilePicture"
                     style={{ display: "none" }}
                     onChange={handleUploadImage}
+                    disabled={auth?.isInfected}
                   />
                   <TextField
                     label="Name"
@@ -179,6 +186,7 @@ const Profile = () => {
                       type="number"
                       defaultValue={auth?.last_location?.longitude}
                       inputRef={longitude}
+                      disabled={auth?.isInfected}
                       required
                     />
                     <TextField
@@ -188,6 +196,7 @@ const Profile = () => {
                       type="number"
                       defaultValue={auth?.last_location?.latitude}
                       inputRef={latitude}
+                      disabled={auth?.isInfected}
                       required
                     />
                   </Stack>
