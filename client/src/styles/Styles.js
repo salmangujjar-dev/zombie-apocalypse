@@ -5,7 +5,7 @@ const Styles = {
     left: "50%",
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
-    width: 400,
+    width: 500,
     pt: 2,
     px: 4,
     pb: 3,

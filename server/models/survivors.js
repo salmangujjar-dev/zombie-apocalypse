@@ -56,6 +56,12 @@ const survivorSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  tradeHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "trades",
+    },
+  ],
 });
 
 survivorSchema.pre("save", async function (next) {

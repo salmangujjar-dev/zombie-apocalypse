@@ -49,13 +49,16 @@ router.post(
       const survivor = await Survivors.findOne(
         { _id },
         { password: 0 }
-      ).populate("resources.item", "item");
-
+      ).populate(
+        "resources.item tradeHistory",
+        "item points inventory inventory1 reqFrom reqTo status"
+      );
       const body = survivor.toObject();
       const modifiedResources = body.resources.map((resource) => ({
         _id: resource.item._id,
         item: resource.item.item,
         quantity: resource.quantity,
+        points: resource.item.points,
       }));
       body.resources = modifiedResources;
       body.token = req.body.token;
