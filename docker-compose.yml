@@ -1,0 +1,55 @@
+version: '3.7'
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: trainee-project-server
+    container_name: trainee-project-server
+    volumes:
+      - ./server:/server
+      - /node_modules
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongo
+    env_file: ./.dockerenv
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
+  
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: trainee-project-client
+    container_name: trainee-project-client
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+    depends_on:
+      - server
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+  
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    data-volume:
+    node_modules:
+    web-root:
+      driver: local
