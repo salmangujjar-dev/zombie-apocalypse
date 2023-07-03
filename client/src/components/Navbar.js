@@ -9,14 +9,17 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import SearchBar from "./SearchBar";
 
 const pages = [
-  { name: "Home", path: "/" },
+  { name: "Home", path: "/home" },
   { name: "Trade", path: "/trade" },
+  { name: "Report", path: "/report" },
 ];
 
 const Title = "ProjectX";
@@ -40,6 +43,7 @@ const Navbar = () => {
       operation: function () {
         setAuth(null);
         localStorage.removeItem("token");
+        localStorage.removeItem("_id");
         handleCloseUserMenu();
       },
     },
@@ -62,6 +66,17 @@ const Navbar = () => {
 
   return (
     <AppBar position="static">
+      {auth?.isInfected && (
+        <span
+          style={{
+            backgroundColor: "red",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          You are Infected
+        </span>
+      )}
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -142,6 +157,13 @@ const Navbar = () => {
               </Button>
             ))}
           </Box>
+          <Stack
+            spacing={2}
+            sx={{ width: 300 }}
+            mr={3}
+          >
+            <SearchBar />
+          </Stack>
           <Typography
             variant="h6"
             component="h3"
@@ -163,7 +185,11 @@ const Navbar = () => {
               >
                 <Avatar
                   alt={auth?.name}
-                  src="/static/images/avatar/2.jpg"
+                  src={
+                    auth?.profile_image
+                      ? `data:image/*;base64,${auth.profile_image}`
+                      : ""
+                  }
                 />
               </IconButton>
             </Tooltip>

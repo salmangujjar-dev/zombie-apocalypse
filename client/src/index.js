@@ -7,6 +7,7 @@ import App from "./App.js";
 import Home from "./views/Home.js";
 import Trade from "./views/Trade.js";
 import Profile from "./views/Profile";
+import Report from "./views/Report";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./components/RequireAuth";
 
@@ -34,10 +35,18 @@ root.render(
                 path="/profile"
                 element={<Profile />}
               />
+              <Route
+                path="/report"
+                element={<Report />}
+              />
             </Route>
             <Route element={<RequireAuth allowedRoles={[roles[0]]} />}>
               <Route
                 path="/trade"
+                element={<Trade />}
+              />
+              <Route
+                path="/trade/:id"
                 element={<Trade />}
               />
             </Route>

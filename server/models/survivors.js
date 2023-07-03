@@ -32,14 +32,13 @@ const survivorSchema = new mongoose.Schema({
     type: String,
   },
   profile_image: {
-    fileName: String,
-    contentType: String,
+    type: Buffer,
   },
   resources: [
     {
       item: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Inventories",
+        ref: "inventories",
         required: true,
       },
       quantity: {
@@ -52,6 +51,17 @@ const survivorSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  reportHistory: [String],
+  reportCount: {
+    type: Number,
+    required: true,
+  },
+  tradeHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "trades",
+    },
+  ],
 });
 
 survivorSchema.pre("save", async function (next) {

@@ -46,9 +46,9 @@ const Login = ({ setShowLogin }) => {
           },
         }
       );
-
-      setAuth(response.data.body);
-      localStorage.setItem("token", response.data.body.token);
+      setAuth(response.data);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("_id", response.data._id);
 
       toast.success(response.data.message);
 

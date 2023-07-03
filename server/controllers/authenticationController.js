@@ -3,10 +3,10 @@ const router = express.Router();
 const multer = require("multer");
 const bodyParser = require("body-parser");
 const { Survivors } = require("../models/survivors");
-const checkUsernameExists = require("./middlewares");
+const { checkUsernameExists } = require("./middlewares");
 const jwt = require("jsonwebtoken");
 
-const upload = multer({ dest: "uploads/" });
+const upload = multer();
 
 const jsonParser = bodyParser.json();
 
@@ -15,13 +15,7 @@ router.post(
   upload.single("file"),
   checkUsernameExists,
   async (req, res) => {
-    profile_image = null;
-    if (req.file) {
-      profile_image = {
-        fileName: req.file.filename,
-        contentType: req.file.mimetype,
-      };
-    }
+    profile_image = req.file?.buffer || null;
 
     survivorObj = req.body.survivorObj;
     const newSurvivor = new Survivors({
@@ -38,6 +32,7 @@ router.post(
 router.post("/api/v1/login", jsonParser, async (req, res) => {
   try {
     const { username, password } = req.body;
+
     const survivor = await Survivors.findOne({ username });
     if (!survivor) {
       res.status(401).json({ message: "Survivor does not exist!" });
@@ -48,11 +43,12 @@ router.post("/api/v1/login", jsonParser, async (req, res) => {
       res.status(401).json({ message: "Invalid Password!" });
     }
 
-    const body = jwt.sign({ survivor }, "secretKey");
-    delete body.password;
-    res
-      .status(200)
-      .json({ ...body, token, message: "Logged in successfully!" });
+    const obj = {
+      _id: survivor._id,
+      role: survivor.role,
+    };
+    const token = jwt.sign({ _id: obj._id }, "secretKey");
+    res.status(200).json({ ...obj, token, message: "Logged in successfully!" });
   } catch (error) {
     res.status(500);
   }
