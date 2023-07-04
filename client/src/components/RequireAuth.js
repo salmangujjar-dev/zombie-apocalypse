@@ -34,7 +34,7 @@ const RequireAuth = ({ allowedRoles }) => {
     } else {
       setIsAuthenticating(false);
     }
-  }, []);
+  }, [setAuth, auth]);
 
   if (isAuthenticating) {
     return <Loader />;

@@ -98,7 +98,7 @@ const Profile = () => {
     if (auth?.profile_image) {
       setPreviewImage(`data:image/*;base64,${auth?.profile_image}`);
     }
-  }, []);
+  }, [auth.profile_image]);
 
   return (
     <>

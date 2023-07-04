@@ -66,7 +66,7 @@ const TradeCard = ({ tradeHistory, id, token }) => {
   return (
     <Card className="d-flex">
       <CardContent style={{ flexGrow: 1 }}>
-        <Typography variant="h6">Trade Id: {tradeHistory.reqFrom}</Typography>
+        <Typography variant="h6">Trader Id: {tradeHistory.reqFrom}</Typography>
         <Button
           variant="contained"
           onClick={toggleOpen}
@@ -88,7 +88,7 @@ const TradeCard = ({ tradeHistory, id, token }) => {
               fontWeight="bold"
               margin="auto"
             >
-              My Items
+              {tradeHistory.reqFrom === id ? "My Items" : "Target Items"}
             </Typography>
             {tradeHistory.inventory.map((item, index) => (
               <Grid
@@ -111,7 +111,7 @@ const TradeCard = ({ tradeHistory, id, token }) => {
               fontWeight="bold"
               margin="auto"
             >
-              Target Items
+              {tradeHistory.reqFrom === id ? "Target Items" : "My Items"}
             </Typography>
             {tradeHistory.inventory1.map((item, index) => (
               <Grid
