@@ -14,8 +14,8 @@ router.put(
   async (req, res) => {
     try {
       const trade = await Trades.findOne({
-        reqFrom: req.body.data.reqFrom,
-        reqTo: req.body.data.reqTo,
+        reqFrom: { $in: [req.body.data.reqFrom, req.body.data.reqTo] },
+        reqTo: { $in: [req.body.data.reqFrom, req.body.data.reqTo] },
         status: "Pending",
       });
 

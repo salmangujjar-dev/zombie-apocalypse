@@ -35,7 +35,14 @@ export const TradeStepper = ({
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleChange = (setInventory, setPoints, index, value) => {
+  const handleChange = (inventory, setInventory, setPoints, index, value) => {
+    if (
+      value > inventory[index].quantity + parseInt(inventory[index].tradeQty) ||
+      value < 0
+    ) {
+      toast.error("Invalid entry!");
+      return;
+    }
     setInventory((prevItems) => {
       const updatedItems = [...prevItems];
       const item = updatedItems[index];
@@ -69,6 +76,7 @@ export const TradeStepper = ({
     quantity,
     tradeQty,
     tradeQtyLabel,
+    inventory,
     setInventory,
     setPoints,
   }) => (
@@ -99,7 +107,13 @@ export const TradeStepper = ({
             value={tradeQty}
             InputProps={{ inputProps: { min: 0 } }}
             onChange={(e) =>
-              handleChange(setInventory, setPoints, index, e.target.value)
+              handleChange(
+                inventory,
+                setInventory,
+                setPoints,
+                index,
+                e.target.value
+              )
             }
           />
         )}
@@ -143,6 +157,7 @@ export const TradeStepper = ({
                 item={item.item}
                 quantity={item.quantity}
                 tradeQty={item.tradeQty}
+                inventory={inventory}
                 setInventory={setInventory}
                 setPoints={setPoints}
               />
@@ -186,6 +201,7 @@ export const TradeStepper = ({
                 item={item.item}
                 quantity={item.quantity}
                 tradeQty={item.tradeQty}
+                inventory={inventory1}
                 setInventory={setInventory1}
                 setPoints={setPoints1}
               />
