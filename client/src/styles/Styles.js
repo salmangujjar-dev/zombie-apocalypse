@@ -32,11 +32,30 @@ const Styles = {
     },
   },
   AutoComplete: {
-    "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
-      color: "white",
+    mt: 3,
+    "& .MuiAutocomplete-inputRoot": {
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "black",
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderColor: "black",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        color: "black",
+        borderColor: "black",
+      },
     },
-    "& .MuiAutocomplete-endAdornment .MuiSvgIcon-root": {
-      color: "white",
+    "& .MuiAutocomplete-input": {
+      color: "black",
+    },
+    "& .MuiInputLabel-outlined": {
+      color: "black",
+    },
+    "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
+      color: "black",
+    },
+    "&.Mui-focused .MuiInputLabel-outlined": {
+      color: "black",
     },
   },
 };

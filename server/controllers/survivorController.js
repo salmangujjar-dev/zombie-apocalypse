@@ -11,15 +11,27 @@ const jsonParser = bodyParser.json();
 
 router.get("/", jsonParser, verifyToken, async (req, res) => {
   try {
-    const { _id, input } = req.query;
-    const result = await Survivors.find(
-      {
-        name: { $regex: new RegExp(`^${input}`, "i") },
-        _id: { $ne: { _id } },
-        role: "survivor",
-      },
-      "_id name username profile_image"
-    ).limit(10);
+    const { _id, input, inventory } = req.query;
+    let result = null;
+    if (input) {
+      result = await Survivors.find(
+        {
+          name: { $regex: new RegExp(`^${input}`, "i") },
+          _id: { $ne: { _id } },
+          role: "survivor",
+        },
+        "_id name username profile_image"
+      ).limit(10);
+    } else {
+      result = await Survivors.find(
+        {
+          resources: { $elemMatch: { $and: inventory } },
+          _id: { $ne: { _id } },
+          role: "survivor",
+        },
+        "_id name username profile_image"
+      ).limit(10);
+    }
 
     const body = await result.map((item) => item.toObject());
     res.status(200).json({ body });

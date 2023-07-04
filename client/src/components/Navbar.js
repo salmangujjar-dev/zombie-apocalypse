@@ -9,7 +9,6 @@ import {
   Container,
   Avatar,
   Button,
-  Stack,
   Tooltip,
 } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
@@ -160,13 +159,7 @@ const Navbar = () => {
               </Button>
             ))}
           </Box>
-          <Stack
-            spacing={2}
-            sx={{ width: 300 }}
-            mr={3}
-          >
-            <SearchBar />
-          </Stack>
+          <SearchBar />
           <Typography
             variant="h6"
             component="h3"
