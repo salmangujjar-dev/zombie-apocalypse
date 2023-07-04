@@ -14,7 +14,7 @@ import RequireAuth from "./components/RequireAuth";
 const ele = document.getElementById("root");
 const root = ReactDOM.createRoot(ele);
 
-const roles = ["survivor", "admin", "infected"];
+const roles = ["survivor", "admin"];
 
 root.render(
   <React.StrictMode>

@@ -37,7 +37,6 @@ const Report = () => {
             },
           }
         );
-        setLoading(false);
         let { totalCount, infectedCount } = response.data;
 
         setInfectedPieChartData([
@@ -55,11 +54,13 @@ const Report = () => {
           ["Item Name", "Point Lost"],
           ...response.data.infectedPointLost,
         ]);
+
+        setLoading(false);
       } catch (err) {}
     };
     setLoading(true);
     fetchReport();
-  }, []);
+  }, [auth.token]);
 
   if (loading) {
     return <Loader />;

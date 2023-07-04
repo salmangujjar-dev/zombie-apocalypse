@@ -32,7 +32,7 @@ const SearchBar = () => {
     };
 
     input && fetchSurvivors(input);
-  }, [input]);
+  }, [input, auth._id, auth.token]);
 
   return (
     <>

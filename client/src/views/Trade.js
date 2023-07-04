@@ -136,7 +136,7 @@ const Trade = () => {
     };
 
     id && fetchProfile();
-  }, [id]);
+  }, [id, auth.resources, auth.token]);
 
   const Field = ({ label, value }) => (
     <Grid
