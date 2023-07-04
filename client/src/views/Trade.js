@@ -44,7 +44,7 @@ const Trade = () => {
     try {
       const response = await axios.put(
         "http://localhost:3001/api/v1/reportSurvivor",
-        { token: auth.token, victimId: auth._id, reqTo: survivor._id },
+        { token: auth.token, victimId: auth._id, targetId: survivor._id },
         {
           headers: {
             "Content-Type": "application/json",
