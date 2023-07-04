@@ -1,3 +1,4 @@
+import { memo, useState } from "react";
 import {
   Card,
   CardActions,
@@ -10,10 +11,10 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { memo, useState } from "react";
-import Styles from "../styles/Styles";
 import axios from "axios";
 import { toast } from "react-toastify";
+
+import Styles from "../styles/Styles";
 
 const TradeCard = ({ tradeHistory, id, token }) => {
   const [open, setOpen] = useState(false);
@@ -29,7 +30,7 @@ const TradeCard = ({ tradeHistory, id, token }) => {
         tradeObj: tradeHistory,
       };
       const response = await axios.put(
-        "http://localhost:3001/api/v1/handleTrade",
+        "http://localhost:3001/api/v1/trade/",
         data
       );
       if (response.status === 400) throw new Error(response);
@@ -50,7 +51,7 @@ const TradeCard = ({ tradeHistory, id, token }) => {
         status: "Rejected",
       };
       const response = await axios.put(
-        "http://localhost:3001/api/v1/handleTrade",
+        "http://localhost:3001/api/v1/trade/",
         data
       );
       if (response.status === 400) throw new Error(response);

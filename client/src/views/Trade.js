@@ -1,4 +1,3 @@
-import Navbar from "../components/Navbar";
 import {
   Grid,
   Avatar,
@@ -12,13 +11,15 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import useAuth from "../hooks/useAuth";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import Loader from "../components/Loader";
+import axios from "axios";
+
 import Styles from "../styles/Styles";
 import { TradeStepper } from "../components/TradeStepper";
 import TradeCard from "../components/TradeCard";
+import Navbar from "../components/Navbar";
+import Loader from "../components/Loader";
+import useAuth from "../hooks/useAuth";
 
 const Trade = () => {
   const [open, setOpen] = useState(false);
@@ -28,7 +29,7 @@ const Trade = () => {
   const [inventory1, setInventory1] = useState([]);
   const [points, setPoints] = useState(0);
   const [points1, setPoints1] = useState(0);
-  const { id } = useParams();
+  const { _id } = useParams();
   const { auth } = useAuth();
 
   const toggleOpen = () => {
@@ -43,11 +44,12 @@ const Trade = () => {
 
     try {
       const response = await axios.put(
-        "http://localhost:3001/api/v1/reportSurvivor",
-        { token: auth.token, victimId: auth._id, targetId: survivor._id },
+        "http://localhost:3001/api/v1/survivor/report",
+        { victimId: auth._id, targetId: survivor._id },
         {
           headers: {
             "Content-Type": "application/json",
+            token: auth.token,
           },
         }
       );
@@ -77,10 +79,10 @@ const Trade = () => {
       status: "Pending",
     };
     try {
-      const response = await axios.put(
-        "http://localhost:3001/api/v1/requestTrade",
-        { data, token: auth?.token }
-      );
+      const response = await axios.post("http://localhost:3001/api/v1/trade/", {
+        data,
+        token: auth?.token,
+      });
       setOpen(false);
       if (response.status === 400) throw new Error(response);
 
@@ -99,12 +101,12 @@ const Trade = () => {
       setLoading(true);
       try {
         const token = auth?.token;
-        const response = await axios.post(
-          `http://localhost:3001/api/v1/fetchProfile/${id}`,
-          { token },
+        const response = await axios.get(
+          `http://localhost:3001/api/v1/survivor/${_id}`,
           {
             headers: {
               "Content-Type": "application/json",
+              token,
             },
           }
         );
@@ -135,8 +137,8 @@ const Trade = () => {
       }
     };
 
-    id && fetchProfile();
-  }, [id, auth.resources, auth.token]);
+    _id && fetchProfile();
+  }, [_id, auth.resources, auth.token]);
 
   const Field = ({ label, value }) => (
     <Grid
@@ -169,7 +171,7 @@ const Trade = () => {
       <Navbar />
       <Toolbar />
       <Container>
-        {id ? (
+        {_id ? (
           <Box className="d-flex justify-content-center">
             <Stack
               spacing={2}

@@ -1,51 +1,47 @@
 const express = require("express");
-const router = express.Router();
 const bodyParser = require("body-parser");
+
 const { verifyToken } = require("./middlewares");
 const { Trades } = require("../models/trades");
 const { Survivors } = require("../models/survivors");
 
+const router = express.Router();
 const jsonParser = bodyParser.json();
 
-router.put(
-  "/api/v1/requestTrade",
-  jsonParser,
-  verifyToken,
-  async (req, res) => {
-    try {
-      const trade = await Trades.findOne({
-        reqFrom: { $in: [req.body.data.reqFrom, req.body.data.reqTo] },
-        reqTo: { $in: [req.body.data.reqFrom, req.body.data.reqTo] },
-        status: "Pending",
-      });
+router.post("/", jsonParser, verifyToken, async (req, res) => {
+  try {
+    const trade = await Trades.findOne({
+      reqFrom: { $in: [req.body.data.reqFrom, req.body.data.reqTo] },
+      reqTo: { $in: [req.body.data.reqFrom, req.body.data.reqTo] },
+      status: "Pending",
+    });
 
-      if (trade) {
-        res.status(400).json({ message: "You already have a pending trade." });
-        return;
-      }
-
-      const newTrade = new Trades(req.body.data);
-      const { _id } = await newTrade.save();
-
-      await Survivors.updateMany(
-        { _id: { $in: [req.body.data.reqFrom, req.body.data.reqTo] } },
-        {
-          $push: {
-            tradeHistory: _id,
-          },
-        }
-      );
-
-      res.status(200).json({
-        message: "Trade Request success!",
-      });
-    } catch (err) {
-      res.status(400).json({ message: "Something went wrong." });
+    if (trade) {
+      res.status(400).json({ message: "You already have a pending trade." });
+      return;
     }
-  }
-);
 
-router.put("/api/v1/handleTrade", jsonParser, verifyToken, async (req, res) => {
+    const newTrade = new Trades(req.body.data);
+    const { _id } = await newTrade.save();
+
+    await Survivors.updateMany(
+      { _id: { $in: [req.body.data.reqFrom, req.body.data.reqTo] } },
+      {
+        $push: {
+          tradeHistory: _id,
+        },
+      }
+    );
+
+    res.status(200).json({
+      message: "Trade Request success!",
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Something went wrong." });
+  }
+});
+
+router.put("/", jsonParser, verifyToken, async (req, res) => {
   try {
     await Trades.updateOne(
       {
@@ -103,7 +99,7 @@ router.put("/api/v1/handleTrade", jsonParser, verifyToken, async (req, res) => {
           : "Trade Accepted!",
     });
   } catch (err) {
-    res.status(400).json({ message: "Something went wrong." });
+    res.status(500).json({ message: "Something went wrong." });
   }
 });
 

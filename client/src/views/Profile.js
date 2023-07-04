@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import Navbar from "../components/Navbar";
 import {
   Modal,
   Button,
@@ -16,10 +15,12 @@ import {
   FormLabel,
   Typography,
 } from "@mui/material";
-import useAuth from "../hooks/useAuth";
 import { toast, ToastContainer } from "react-toastify";
-import Styles from "../styles/Styles";
 import axios from "axios";
+
+import Navbar from "../components/Navbar";
+import useAuth from "../hooks/useAuth";
+import Styles from "../styles/Styles";
 import Loader from "../components/Loader";
 
 const Profile = () => {
@@ -81,7 +82,7 @@ const Profile = () => {
       data.append("token", localStorage.getItem("token"));
 
       await axios.put(
-        `http://localhost:3001/api/v1/updateSurvivor/${auth._id}`,
+        `http://localhost:3001/api/v1/survivor/${auth._id}`,
         data
       );
 

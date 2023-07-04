@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
-import { theme } from "./styles/Theme";
+import "react-toastify/dist/ReactToastify.css";
+
 import App from "./App.js";
 import Home from "./views/Home.js";
 import Trade from "./views/Trade.js";
@@ -10,6 +11,7 @@ import Profile from "./views/Profile";
 import Report from "./views/Report";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./components/RequireAuth";
+import { theme } from "./styles/Theme";
 
 const ele = document.getElementById("root");
 const root = ReactDOM.createRoot(ele);
@@ -35,10 +37,6 @@ root.render(
                 path="/profile"
                 element={<Profile />}
               />
-              <Route
-                path="/report"
-                element={<Report />}
-              />
             </Route>
             <Route element={<RequireAuth allowedRoles={[roles[0]]} />}>
               <Route
@@ -46,8 +44,14 @@ root.render(
                 element={<Trade />}
               />
               <Route
-                path="/trade/:id"
+                path="/trade/:_id"
                 element={<Trade />}
+              />
+            </Route>
+            <Route element={<RequireAuth allowedRoles={[roles[1]]} />}>
+              <Route
+                path="/report"
+                element={<Report />}
               />
             </Route>
           </Routes>

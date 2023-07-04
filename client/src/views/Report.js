@@ -1,10 +1,16 @@
-import { Toolbar, Box, Grid, Container } from "@mui/material";
-import Navbar from "../components/Navbar";
-import { Chart } from "react-google-charts";
-import useAuth from "../hooks/useAuth";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Toolbar, Box, Grid, Container } from "@mui/material";
+import { Chart } from "react-google-charts";
+
+import useAuth from "../hooks/useAuth";
+import Navbar from "../components/Navbar";
 import Loader from "../components/Loader";
+import {
+  SURVIVOR_PERCENTAGE_OPTIONS,
+  AVG_RESOURCES_QTY_OPTIONS,
+  INFECTED_POINT_LOST_OPTIONS,
+} from "../utils/constants";
 
 const Report = () => {
   const { auth } = useAuth();
@@ -13,27 +19,14 @@ const Report = () => {
   const [infectedPointLostData, setInfectedPointLostData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const infectedPieChart = {
-    title: "Percentage of Infected / Non-Infected Survivors",
-    pieHole: 0.4,
-  };
-
-  const avgResourcesQty = {
-    title: "Average amount of each kind of resources",
-  };
-
-  const infectedPointLost = {
-    title: "Point lost (Infected Survivor)",
-  };
-
   useEffect(() => {
     const fetchReport = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/v1/fetchReport",
+          "http://localhost:3001/api/v1/survivor/report",
           {
             headers: {
-              token: auth?.token,
+              token: auth.token,
             },
           }
         );
@@ -87,7 +80,7 @@ const Report = () => {
                 width="100%"
                 height="400px"
                 data={infectedPieChartData}
-                options={infectedPieChart}
+                options={SURVIVOR_PERCENTAGE_OPTIONS}
               />
             </Grid>
             <Grid
@@ -102,7 +95,7 @@ const Report = () => {
                   width="100%"
                   height="400px"
                   data={avgResourcesQtyData}
-                  options={avgResourcesQty}
+                  options={AVG_RESOURCES_QTY_OPTIONS}
                 />
               )}
             </Grid>
@@ -125,7 +118,7 @@ const Report = () => {
                   width="100%"
                   height="400px"
                   data={infectedPointLostData}
-                  options={infectedPointLost}
+                  options={INFECTED_POINT_LOST_OPTIONS}
                 />
               )}
             </Grid>

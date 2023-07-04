@@ -1,10 +1,11 @@
+import { useState, useEffect } from "react";
 import { Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import useAuth from "./hooks/useAuth";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import useAuth from "./hooks/useAuth";
-import axios from "axios";
 import Loader from "./components/Loader";
 
 function App() {
@@ -18,12 +19,12 @@ function App() {
       if (token) {
         try {
           const _id = localStorage.getItem("_id");
-          const response = await axios.post(
-            `http://localhost:3001/api/v1/fetchProfile/${_id}`,
-            { token },
+          const response = await axios.get(
+            `http://localhost:3001/api/v1/survivor/${_id}`,
             {
               headers: {
                 "Content-Type": "application/json",
+                token,
               },
             }
           );
@@ -36,7 +37,7 @@ function App() {
     if (!auth?.token) {
       getAuth(localStorage.getItem("token"));
     }
-  }, []);
+  }, [auth, setAuth, navigate]);
 
   return (
     <>

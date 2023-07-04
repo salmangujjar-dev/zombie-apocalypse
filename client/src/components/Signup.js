@@ -18,9 +18,9 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LockIcon from "@mui/icons-material/Lock";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
 import Styles from "../styles/Styles";
 
 const Login = ({ setShowLogin }) => {
@@ -99,7 +99,7 @@ const Login = ({ setShowLogin }) => {
       data.append("survivorObj", JSON.stringify(survivorObj));
 
       const response = await axios.post(
-        "http://localhost:3001/api/v1/signup",
+        "http://localhost:3001/api/v1/authentication/signup",
         data
       );
 
@@ -118,7 +118,7 @@ const Login = ({ setShowLogin }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/v1/getInventory"
+          "http://localhost:3001/api/v1/inventory"
         );
         setInventory(response.data.updatedInventory);
       } catch (err) {}

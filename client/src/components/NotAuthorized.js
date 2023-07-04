@@ -1,5 +1,6 @@
-import Navbar from "./Navbar";
 import { Toolbar, Container } from "@mui/material";
+
+import Navbar from "./Navbar";
 
 const NotAuthorized = () => {
   return (

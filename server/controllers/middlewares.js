@@ -1,11 +1,14 @@
-const { Survivors } = require("../models/survivors");
 const jwt = require("jsonwebtoken");
+
+const { Survivors } = require("../models/survivors");
 
 const checkUsernameExists = async (req, res, next) => {
   req.body.survivorObj = JSON.parse(req.body.survivorObj);
   const { username } = req.body.survivorObj;
 
-  const existingSurvivor = await Survivors.findOne({ username });
+  const existingSurvivor = await Survivors.findOne({
+    username: { $regex: username, $options: "i" },
+  });
   if (existingSurvivor) {
     return res.status(409).json({ message: "Survivor already exists" });
   } else {
