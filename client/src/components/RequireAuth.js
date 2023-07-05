@@ -1,8 +1,10 @@
-import { useLocation, Navigate, Outlet, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 import Loader from "./Loader";
+import NotAuthorized from "./NotAuthorized";
+import useAuth from "../hooks/useAuth";
 
 const RequireAuth = ({ allowedRoles }) => {
   const { auth, setAuth } = useAuth();
@@ -11,41 +13,37 @@ const RequireAuth = ({ allowedRoles }) => {
 
   useEffect(() => {
     const getAuth = async (token) => {
-      if (!token) {
-        token = localStorage.getItem("token");
-      }
-
       if (token) {
         try {
-          const response = await axios.post(
-            "http://localhost:3001/api/v1/fetchSurvivorWithToken",
-            { token: token },
+          const _id = localStorage.getItem("_id");
+          const response = await axios.get(
+            process.env.REACT_APP_SURVIVOR_API + _id,
             {
               headers: {
                 "Content-Type": "application/json",
+                token,
               },
             }
           );
-          setAuth(response.data.data);
+          setAuth(response.data.survivor);
         } catch (error) {}
       }
       setIsAuthenticating(false);
     };
-    if (!auth.token) {
-      getAuth(auth.token);
+    if (!auth?.username) {
+      getAuth(localStorage.getItem("token"));
     } else {
       setIsAuthenticating(false);
     }
-  }, []);
+  }, [setAuth, auth]);
 
   if (isAuthenticating) {
     return <Loader />;
   }
-
   return allowedRoles.find((role) => auth?.role?.includes(role)) ? (
     <Outlet />
   ) : auth?.token ? (
-    <h1>You are not authorized to view this page.</h1>
+    <NotAuthorized />
   ) : (
     <Navigate
       to="/"

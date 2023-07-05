@@ -12,14 +12,15 @@ import {
   Grid,
   FormLabel,
   InputAdornment,
+  Avatar,
   Typography,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LockIcon from "@mui/icons-material/Lock";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
 import Styles from "../styles/Styles";
 
 const Login = ({ setShowLogin }) => {
@@ -27,7 +28,7 @@ const Login = ({ setShowLogin }) => {
   const [showError, setShowError] = useState(false);
   const [image, setImage] = useState(null);
   const [gender, setGender] = useState("Male");
-  const [uploadImageText, setUploadImageText] = useState("Choose Image");
+  const [previewImage, setPreviewImage] = useState();
   const [open, setOpen] = useState(false);
   const [inventory, setInventory] = useState([]);
 
@@ -35,6 +36,8 @@ const Login = ({ setShowLogin }) => {
   const name = useRef();
   const age = useRef();
   const password = useRef();
+  const longitude = useRef();
+  const latitude = useRef();
 
   const toggleOpen = () => {
     setOpen(!open);
@@ -46,7 +49,12 @@ const Login = ({ setShowLogin }) => {
 
   const handleUploadImage = (event) => {
     setImage(event.target.files[0]);
-    setUploadImageText(event.target.files[0].name);
+    setPreviewImage(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const handleAvatarClick = () => {
+    const fileInput = document.getElementById("profilePicture");
+    fileInput.click();
   };
 
   const handleGenderChange = (event) => {
@@ -75,10 +83,15 @@ const Login = ({ setShowLogin }) => {
         age: age.current.value,
         gender,
         password: password.current.value,
-        last_location: { longitude: 20, latitude: 20 },
+        last_location: {
+          longitude: longitude.current.value,
+          latitude: latitude.current.value,
+        },
         role: "survivor",
         isInfected: false,
         resources: updatedResources,
+        reportCount: 0,
+        reportHistory: [],
       };
 
       const data = new FormData();
@@ -86,7 +99,7 @@ const Login = ({ setShowLogin }) => {
       data.append("survivorObj", JSON.stringify(survivorObj));
 
       const response = await axios.post(
-        "http://localhost:3001/api/v1/signup",
+        process.env.REACT_APP_AUTHENTICATION_API + "signup",
         data
       );
 
@@ -104,9 +117,7 @@ const Login = ({ setShowLogin }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/api/v1/getInventory"
-        );
+        const response = await axios.get(process.env.REACT_APP_INVENTORY_API);
         setInventory(response.data.updatedInventory);
       } catch (err) {}
     };
@@ -132,19 +143,27 @@ const Login = ({ setShowLogin }) => {
             spacing={2}
             direction="column"
           >
-            <Button
-              variant="contained"
-              component="label"
-            >
-              {uploadImageText}
-              <input
-                hidden
-                accept="image/*"
-                type="file"
-                name="profile_image"
-                onChange={handleUploadImage}
-              />
-            </Button>
+            <Avatar
+              className="mx-auto"
+              src={previewImage}
+              title="Upload Image"
+              sx={{
+                width: 200,
+                height: 200,
+                cursor: "pointer",
+                transition: "opacity 0.3s",
+                "&:hover": {
+                  opacity: 0.7,
+                },
+              }}
+              onClick={handleAvatarClick}
+            />
+            <input
+              type="file"
+              id="profilePicture"
+              style={{ display: "none" }}
+              onChange={handleUploadImage}
+            />
             <TextField
               label="Name"
               variant="outlined"
@@ -173,6 +192,24 @@ const Login = ({ setShowLogin }) => {
               InputProps={{ inputProps: { min: 0 } }}
               required
             />
+            <Stack direction="row">
+              <TextField
+                label="Longitude"
+                variant="outlined"
+                name="longitude"
+                type="number"
+                inputRef={longitude}
+                required
+              />
+              <TextField
+                label="Latitude"
+                variant="outlined"
+                name="latitude"
+                type="number"
+                inputRef={latitude}
+                required
+              />
+            </Stack>
             <RadioGroup
               row
               aria-labelledby="demo-radio-buttons-group-label"

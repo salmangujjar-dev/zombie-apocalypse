@@ -1,40 +1,43 @@
+import { useState, useEffect } from "react";
 import { Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import useAuth from "./hooks/useAuth";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import useAuth from "./hooks/useAuth";
-import axios from "axios";
 import Loader from "./components/Loader";
 
 function App() {
   const [showLogin, setShowLogin] = useState(true);
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(true);
 
   useEffect(() => {
     const getAuth = async (token) => {
       if (token) {
         try {
-          const response = await axios.post(
-            "http://localhost:3001/api/v1/fetchSurvivorWithToken",
-            { token: token },
+          const _id = localStorage.getItem("_id");
+          const response = await axios.get(
+            process.env.REACT_APP_SURVIVOR_API + _id,
             {
               headers: {
                 "Content-Type": "application/json",
+                token,
               },
             }
           );
-          setAuth(response.data.data);
+          setAuth(response.data.survivor);
           navigate("/home");
         } catch (error) {}
       }
       setIsAuthenticating(false);
     };
-
-    getAuth(localStorage.getItem("token"));
-  }, []);
+    if (!auth?.token) {
+      getAuth(localStorage.getItem("token"));
+    }
+  }, [auth, setAuth, navigate]);
 
   return (
     <>
