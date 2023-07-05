@@ -97,10 +97,9 @@ const Trade = () => {
   };
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfile = async (token) => {
       setLoading(true);
       try {
-        const token = auth?.token;
         const response = await axios.get(
           `http://localhost:3001/api/v1/survivor/${_id}`,
           {
@@ -110,34 +109,30 @@ const Trade = () => {
             },
           }
         );
-        setLoading(false);
         if (response.status === 400) {
           throw new Error(response);
         }
         setSurvivor(response.data.survivor);
-        let modifiedResources = auth?.resources.map((item) => ({
-          _id: item._id,
-          item: item.item,
-          quantity: item.quantity,
-          points: item.points,
+        let modifiedResources = auth.resources.map((item) => ({
+          ...item,
           tradeQty: 0,
         }));
+
         setInventory(modifiedResources);
 
         modifiedResources = response?.data?.survivor?.resources.map((item) => ({
-          _id: item._id,
-          item: item.item,
-          quantity: item.quantity,
-          points: item.points,
+          ...item,
           tradeQty: 0,
         }));
         setInventory1(modifiedResources);
+
+        setLoading(false);
       } catch (err) {
         toast.error(err.response.data.message);
       }
     };
 
-    _id && fetchProfile();
+    _id && fetchProfile(auth.token);
   }, [_id, auth.resources, auth.token]);
 
   const Field = ({ label, value }) => (

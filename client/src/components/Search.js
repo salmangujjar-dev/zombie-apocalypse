@@ -22,7 +22,7 @@ import Styles from "../styles/Styles";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 
-const SearchBar = () => {
+const Search = () => {
   const [input, setInput] = useState("");
   const [result, setResult] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -288,7 +288,11 @@ const SearchBar = () => {
                             ? `data:image/*;base64,${item?.profile_image}`
                             : ""
                         }
-                        sx={{ mr: 2, margin: "auto", width: 120 }}
+                        sx={{
+                          mr: 2,
+                          margin: "auto",
+                          objectFit: "contain",
+                        }}
                         alt={item?.name}
                       />
                       <CardContent>
@@ -319,4 +323,4 @@ const SearchBar = () => {
   );
 };
 
-export default memo(SearchBar);
+export default memo(Search);

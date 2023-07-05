@@ -16,12 +16,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 
 import useAuth from "../hooks/useAuth";
-import SearchBar from "./SearchBar";
+import Search from "./Search";
 
 const pages = [
-  { name: "Home", path: "/home" },
-  { name: "Trade", path: "/trade" },
-  { name: "Report", path: "/report" },
+  { name: "Home", path: "/home", access: ["survivor", "admin"] },
+  { name: "Trade", path: "/trade", access: ["survivor"] },
+  { name: "Report", path: "/report", access: ["admin"] },
 ];
 
 const Title = "ProjectX";
@@ -123,14 +123,17 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.name}
-                  onClick={() => navigate(page.path)}
-                >
-                  <Typography textAlign="center">{page.name}</Typography>
-                </MenuItem>
-              ))}
+              {pages.map(
+                (page) =>
+                  page.access.includes(auth.role) && (
+                    <MenuItem
+                      key={page.name}
+                      onClick={() => navigate(page.path)}
+                    >
+                      <Typography textAlign="center">{page.name}</Typography>
+                    </MenuItem>
+                  )
+              )}
             </Menu>
           </Box>
           <Typography
@@ -149,17 +152,20 @@ const Navbar = () => {
             {Title}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                onClick={() => navigate(page.path)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page.name}
-              </Button>
-            ))}
+            {pages.map(
+              (page) =>
+                page.access.includes(auth.role) && (
+                  <Button
+                    key={page.name}
+                    onClick={() => navigate(page.path)}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page.name}
+                  </Button>
+                )
+            )}
           </Box>
-          <SearchBar />
+          {auth.role === "survivor" && <Search />}
           <Typography
             variant="h6"
             component="h3"
