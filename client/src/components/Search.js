@@ -268,7 +268,7 @@ const Search = () => {
               >
                 {result.map((item) => (
                   <Card
-                    sx={{ maxWidth: 200 }}
+                    sx={{ width: 100, maxHeight: 150 }}
                     key={item._id}
                     onClick={() => handleDropdownSelect(item._id)}
                   >

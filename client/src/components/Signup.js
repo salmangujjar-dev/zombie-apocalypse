@@ -6,6 +6,9 @@ import {
   Stack,
   FormControl,
   TextField,
+  InputLabel,
+  Select,
+  MenuItem,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -31,6 +34,7 @@ const Login = ({ setShowLogin }) => {
   const [previewImage, setPreviewImage] = useState();
   const [open, setOpen] = useState(false);
   const [inventory, setInventory] = useState([]);
+  const [role, setRole] = useState("survivor");
 
   const username = useRef();
   const name = useRef();
@@ -45,6 +49,10 @@ const Login = ({ setShowLogin }) => {
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
   };
 
   const handleUploadImage = (event) => {
@@ -87,7 +95,7 @@ const Login = ({ setShowLogin }) => {
           longitude: longitude.current.value,
           latitude: latitude.current.value,
         },
-        role: "survivor",
+        role: role,
         isInfected: false,
         resources: updatedResources,
         reportCount: 0,
@@ -233,6 +241,19 @@ const Login = ({ setShowLogin }) => {
                 label="Female"
               />
             </RadioGroup>
+            <FormControl fullWidth>
+              <InputLabel id="select-role">Role</InputLabel>
+              <Select
+                labelId="select-role"
+                value={role}
+                label="Role"
+                onChange={handleRoleChange}
+                required
+              >
+                <MenuItem value="survivor">Survivor</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+              </Select>
+            </FormControl>
             <TextField
               label="Password"
               variant="outlined"
