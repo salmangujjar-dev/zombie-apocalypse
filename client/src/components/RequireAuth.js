@@ -1,9 +1,10 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 import Loader from "./Loader";
 import NotAuthorized from "./NotAuthorized";
+import useAuth from "../hooks/useAuth";
 
 const RequireAuth = ({ allowedRoles }) => {
   const { auth, setAuth } = useAuth();
@@ -15,12 +16,12 @@ const RequireAuth = ({ allowedRoles }) => {
       if (token) {
         try {
           const _id = localStorage.getItem("_id");
-          const response = await axios.post(
-            `http://localhost:3001/api/v1/fetchProfile/${_id}`,
-            { token },
+          const response = await axios.get(
+            process.env.REACT_APP_SURVIVOR_API + _id,
             {
               headers: {
                 "Content-Type": "application/json",
+                token,
               },
             }
           );

@@ -36,10 +36,12 @@ export const TradeStepper = ({
   };
 
   const handleChange = (inventory, setInventory, setPoints, index, value) => {
-    if (
-      value > inventory[index].quantity + parseInt(inventory[index].tradeQty) ||
-      value < 0
-    ) {
+    const tradeQty = isNaN(parseInt(inventory[index].tradeQty))
+      ? 0
+      : parseInt(inventory[index].tradeQty);
+    const qtyDiff = inventory[index].quantity + tradeQty;
+
+    if (value < 0 || value > qtyDiff) {
       toast.error("Invalid entry!");
       return;
     }

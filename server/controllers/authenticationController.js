@@ -1,17 +1,17 @@
 const express = require("express");
-const router = express.Router();
 const multer = require("multer");
 const bodyParser = require("body-parser");
-const { Survivors } = require("../models/survivors");
-const { checkUsernameExists } = require("./middlewares");
 const jwt = require("jsonwebtoken");
 
-const upload = multer();
+const { Survivors } = require("../models/survivors");
+const { checkUsernameExists } = require("./middlewares");
 
+const router = express.Router();
+const upload = multer();
 const jsonParser = bodyParser.json();
 
 router.post(
-  "/api/v1/signup",
+  "/signup",
   upload.single("file"),
   checkUsernameExists,
   async (req, res) => {
@@ -29,7 +29,7 @@ router.post(
   }
 );
 
-router.post("/api/v1/login", jsonParser, async (req, res) => {
+router.post("/login", jsonParser, async (req, res) => {
   try {
     const { username, password } = req.body;
 

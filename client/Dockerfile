@@ -11,8 +11,6 @@ RUN npm install
 COPY ./public ./public
 COPY ./src ./src
 
-RUN ls
-
 EXPOSE 3000
 
 CMD ["npm", "start"]

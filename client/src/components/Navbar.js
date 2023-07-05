@@ -1,25 +1,27 @@
 import { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  Container,
+  Avatar,
+  Button,
+  Tooltip,
+} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
+
 import useAuth from "../hooks/useAuth";
-import SearchBar from "./SearchBar";
+import Search from "./Search";
 
 const pages = [
-  { name: "Home", path: "/home" },
-  { name: "Trade", path: "/trade" },
-  { name: "Report", path: "/report" },
+  { name: "Home", path: "/home", access: ["survivor", "admin"] },
+  { name: "Trade", path: "/trade", access: ["survivor"] },
+  { name: "Report", path: "/report", access: ["admin"] },
 ];
 
 const Title = "ProjectX";
@@ -121,14 +123,17 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.name}
-                  onClick={() => navigate(page.path)}
-                >
-                  <Typography textAlign="center">{page.name}</Typography>
-                </MenuItem>
-              ))}
+              {pages.map(
+                (page) =>
+                  page.access.includes(auth.role) && (
+                    <MenuItem
+                      key={page.name}
+                      onClick={() => navigate(page.path)}
+                    >
+                      <Typography textAlign="center">{page.name}</Typography>
+                    </MenuItem>
+                  )
+              )}
             </Menu>
           </Box>
           <Typography
@@ -147,23 +152,20 @@ const Navbar = () => {
             {Title}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                onClick={() => navigate(page.path)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page.name}
-              </Button>
-            ))}
+            {pages.map(
+              (page) =>
+                page.access.includes(auth.role) && (
+                  <Button
+                    key={page.name}
+                    onClick={() => navigate(page.path)}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page.name}
+                  </Button>
+                )
+            )}
           </Box>
-          <Stack
-            spacing={2}
-            sx={{ width: 300 }}
-            mr={3}
-          >
-            <SearchBar />
-          </Stack>
+          {auth.role === "survivor" && <Search />}
           <Typography
             variant="h6"
             component="h3"

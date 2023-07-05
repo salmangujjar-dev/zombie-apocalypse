@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { Inventories } = require("../models/inventories");
 const bcrypt = require("bcrypt");
 
 const survivorSchema = new mongoose.Schema({
@@ -30,6 +29,7 @@ const survivorSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    enum: ["survivor", "admin"],
   },
   profile_image: {
     type: Buffer,
