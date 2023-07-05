@@ -17,7 +17,7 @@ const RequireAuth = ({ allowedRoles }) => {
         try {
           const _id = localStorage.getItem("_id");
           const response = await axios.get(
-            `http://localhost:3001/api/v1/survivor/${_id}`,
+            process.env.REACT_APP_SURVIVOR_API + _id,
             {
               headers: {
                 "Content-Type": "application/json",

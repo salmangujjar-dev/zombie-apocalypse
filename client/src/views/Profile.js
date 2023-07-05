@@ -81,10 +81,7 @@ const Profile = () => {
       data.append("updatedSurvivorObj", JSON.stringify(updatedSurvivorObj));
       data.append("token", localStorage.getItem("token"));
 
-      await axios.put(
-        `http://localhost:3001/api/v1/survivor/${auth._id}`,
-        data
-      );
+      await axios.put(process.env.REACT_APP_SURVIVOR_API + auth._id, data);
 
       setLoading(true);
 

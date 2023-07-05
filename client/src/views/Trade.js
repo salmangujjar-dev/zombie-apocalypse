@@ -44,7 +44,7 @@ const Trade = () => {
 
     try {
       const response = await axios.put(
-        "http://localhost:3001/api/v1/survivor/report",
+        process.env.REACT_APP_SURVIVOR_REPORT_API,
         { victimId: auth._id, targetId: survivor._id },
         {
           headers: {
@@ -79,7 +79,7 @@ const Trade = () => {
       status: "Pending",
     };
     try {
-      const response = await axios.post("http://localhost:3001/api/v1/trade/", {
+      const response = await axios.post(process.env.REACT_APP_TRADE_API, {
         data,
         token: auth?.token,
       });
@@ -101,7 +101,7 @@ const Trade = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/v1/survivor/${_id}`,
+          process.env.REACT_APP_SURVIVOR_API + _id,
           {
             headers: {
               "Content-Type": "application/json",

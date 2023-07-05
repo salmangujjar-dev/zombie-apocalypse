@@ -99,7 +99,7 @@ const Login = ({ setShowLogin }) => {
       data.append("survivorObj", JSON.stringify(survivorObj));
 
       const response = await axios.post(
-        "http://localhost:3001/api/v1/authentication/signup",
+        process.env.REACT_APP_AUTHENTICATION_API + "signup",
         data
       );
 
@@ -117,9 +117,7 @@ const Login = ({ setShowLogin }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/api/v1/inventory"
-        );
+        const response = await axios.get(process.env.REACT_APP_INVENTORY_API);
         setInventory(response.data.updatedInventory);
       } catch (err) {}
     };

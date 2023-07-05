@@ -23,7 +23,7 @@ const Report = () => {
     const fetchReport = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/v1/survivor/report",
+          process.env.REACT_APP_SURVIVOR_REPORT_API,
           {
             headers: {
               token: auth.token,

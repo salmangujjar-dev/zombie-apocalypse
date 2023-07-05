@@ -38,7 +38,7 @@ const Login = ({ setShowLogin }) => {
       };
 
       const response = await axios.post(
-        "http://localhost:3001/api/v1/authentication/login",
+        process.env.REACT_APP_AUTHENTICATION_API + "login",
         data,
         {
           headers: {

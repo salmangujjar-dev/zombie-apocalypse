@@ -61,19 +61,16 @@ const Search = () => {
         toast.error("Empty Search");
         return;
       }
-      const response = await axios.get(
-        "http://localhost:3001/api/v1/survivor/",
-        {
-          params: {
-            inventory: modifiedInventory,
-            _id: auth._id,
-          },
-          headers: {
-            "Content-Type": "application/json",
-            token: auth.token,
-          },
-        }
-      );
+      const response = await axios.get(process.env.REACT_APP_SURVIVOR_API, {
+        params: {
+          inventory: modifiedInventory,
+          _id: auth._id,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          token: auth.token,
+        },
+      });
       response.data.body.length === 0 && toast.error("Result Empty");
       setResult(response.data.body);
     } catch (err) {}
@@ -129,19 +126,16 @@ const Search = () => {
   useEffect(() => {
     const fetchSurvivors = async (input) => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/api/v1/survivor/",
-          {
-            params: {
-              input,
-              _id: auth._id,
-            },
-            headers: {
-              "Content-Type": "application/json",
-              token: auth.token,
-            },
-          }
-        );
+        const response = await axios.get(process.env.REACT_APP_SURVIVOR_API, {
+          params: {
+            input,
+            _id: auth._id,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            token: auth.token,
+          },
+        });
 
         setResult(response.data.body);
       } catch (err) {}
@@ -153,9 +147,7 @@ const Search = () => {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/api/v1/inventory"
-        );
+        const response = await axios.get(process.env.REACT_APP_INVENTORY_API);
 
         const updatedInventory = response.data.updatedInventory.map(
           (inventory) => ({
