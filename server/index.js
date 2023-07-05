@@ -1,9 +1,15 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const cors = require("cors");
-const app = express();
 
+const authenticationController = require("./controllers/authenticationController");
+const inventoryController = require("./controllers/inventoryController");
+const survivorController = require("./controllers/survivorController");
+const tradeController = require("./controllers/tradeController");
+
+const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(
@@ -19,11 +25,7 @@ mongoose
   })
   .catch((err) => {});
 
-const authenticationController = require("./controllers/authenticationController");
-const inventoryController = require("./controllers/inventoryController");
-const survivorController = require("./controllers/survivorController");
-const tradeController = require("./controllers/tradeController");
-
+app.use(bodyParser.json());
 app.use("/api/v1/authentication", authenticationController);
 app.use("/api/v1/survivor", survivorController);
 app.use("/api/v1/inventory", inventoryController);

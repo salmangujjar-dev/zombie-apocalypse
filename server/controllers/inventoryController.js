@@ -1,12 +1,10 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 
 const { Inventories } = require("../models/inventories");
 
 const router = express.Router();
-const jsonParser = bodyParser.json();
 
-router.get("/", jsonParser, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const inventory = await Inventories.find({}, { item: 1 });
     const updatedInventory = inventory.map((item) => {
@@ -20,7 +18,7 @@ router.get("/", jsonParser, async (req, res) => {
   }
 });
 
-router.post("/", jsonParser, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const newInventory = new Inventories({ ...req.body });
     const insertedInventory = await newInventory.save();

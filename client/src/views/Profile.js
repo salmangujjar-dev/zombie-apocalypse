@@ -79,9 +79,12 @@ const Profile = () => {
       const data = new FormData();
       !auth?.isInfected && data.append("file", image);
       data.append("updatedSurvivorObj", JSON.stringify(updatedSurvivorObj));
-      data.append("token", localStorage.getItem("token"));
 
-      await axios.put(process.env.REACT_APP_SURVIVOR_API + auth._id, data);
+      await axios.put(process.env.REACT_APP_SURVIVOR_API + auth._id, data, {
+        headers: {
+          token: auth.token,
+        },
+      });
 
       setLoading(true);
 

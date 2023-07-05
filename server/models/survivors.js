@@ -51,7 +51,12 @@ const survivorSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
-  reportHistory: [String],
+  reportHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "survivors",
+    },
+  ],
   reportCount: {
     type: Number,
     required: true,
