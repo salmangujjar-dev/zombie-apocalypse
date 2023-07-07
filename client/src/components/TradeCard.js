@@ -24,12 +24,16 @@ const TradeCard = ({ tradeHistory, id, token }) => {
   const handleAccept = async () => {
     try {
       const data = {
-        token: token,
         tradeId: tradeHistory._id,
         status: "Accepted",
         tradeObj: tradeHistory,
       };
-      const response = await axios.put(process.env.REACT_APP_TRADE_API, data);
+      const response = await axios.put(process.env.REACT_APP_TRADE_API, data, {
+        headers: {
+          "Content-Type": "application/json",
+          token,
+        },
+      });
       if (response.status === 400) throw new Error(response);
       toast.success(response.data.message);
       setTimeout(() => {
@@ -43,11 +47,15 @@ const TradeCard = ({ tradeHistory, id, token }) => {
   const handleReject = async () => {
     try {
       const data = {
-        token: token,
         tradeId: tradeHistory._id,
         status: "Rejected",
       };
-      const response = await axios.put(process.env.REACT_APP_TRADE_API, data);
+      const response = await axios.put(process.env.REACT_APP_TRADE_API, data, {
+        headers: {
+          "Content-Type": "application/json",
+          token,
+        },
+      });
       if (response.status === 400) throw new Error(response);
       toast.success(response.data.message);
       setTimeout(() => {

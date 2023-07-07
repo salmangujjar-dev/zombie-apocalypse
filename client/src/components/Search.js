@@ -17,10 +17,10 @@ import {
 import Avatar from "@mui/material/Avatar";
 import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 import Styles from "../styles/Styles";
 import useAuth from "../hooks/useAuth";
-import { toast } from "react-toastify";
 
 const Search = () => {
   const [input, setInput] = useState("");
@@ -209,8 +209,8 @@ const Search = () => {
               onInputChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => handleKeyDown(e.key)}
               getOptionLabel={(option) => option?.name}
-              renderOption={(props, option) => renderOptions(props, option)}
-              renderInput={(params) => renderInput(params)}
+              renderOption={renderOptions}
+              renderInput={renderInput}
             />
           ) : (
             <>
@@ -268,7 +268,7 @@ const Search = () => {
               >
                 {result.map((item) => (
                   <Card
-                    sx={{ maxWidth: 200 }}
+                    sx={{ width: 100, maxHeight: 150 }}
                     key={item._id}
                     onClick={() => handleDropdownSelect(item._id)}
                   >

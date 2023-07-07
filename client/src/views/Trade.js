@@ -79,9 +79,11 @@ const Trade = () => {
       status: "Pending",
     };
     try {
-      const response = await axios.post(process.env.REACT_APP_TRADE_API, {
-        data,
-        token: auth?.token,
+      const response = await axios.post(process.env.REACT_APP_TRADE_API, data, {
+        headers: {
+          "Content-Type": "application/json",
+          token: auth.token,
+        },
       });
       setOpen(false);
       if (response.status === 400) throw new Error(response);
@@ -274,7 +276,7 @@ const Trade = () => {
               display="inline-block"
               width="100%"
             >
-              {auth?.tradeHistory ? (
+              {auth?.tradeHistory.length !== 0 ? (
                 auth.tradeHistory.map((tradeHistory, index) => (
                   <TradeCard
                     key={index}

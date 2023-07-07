@@ -1,18 +1,17 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 
 const { verifyToken } = require("./middlewares");
 const { Trades } = require("../models/trades");
 const { Survivors } = require("../models/survivors");
 
 const router = express.Router();
-const jsonParser = bodyParser.json();
 
-router.post("/", jsonParser, verifyToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
+    const { reqFrom, reqTo } = req.body;
     const trade = await Trades.findOne({
-      reqFrom: { $in: [req.body.data.reqFrom, req.body.data.reqTo] },
-      reqTo: { $in: [req.body.data.reqFrom, req.body.data.reqTo] },
+      reqFrom: { $in: [reqFrom, reqTo] },
+      reqTo: { $in: [reqFrom, reqTo] },
       status: "Pending",
     });
 
@@ -21,11 +20,11 @@ router.post("/", jsonParser, verifyToken, async (req, res) => {
       return;
     }
 
-    const newTrade = new Trades(req.body.data);
+    const newTrade = new Trades(req.body);
     const { _id } = await newTrade.save();
 
     await Survivors.updateMany(
-      { _id: { $in: [req.body.data.reqFrom, req.body.data.reqTo] } },
+      { _id: { $in: [reqFrom, reqTo] } },
       {
         $push: {
           tradeHistory: _id,
@@ -41,8 +40,9 @@ router.post("/", jsonParser, verifyToken, async (req, res) => {
   }
 });
 
-router.put("/", jsonParser, verifyToken, async (req, res) => {
+router.put("/", verifyToken, async (req, res) => {
   try {
+    const { status } = req.body;
     await Trades.updateOne(
       {
         _id: req.body.tradeId,

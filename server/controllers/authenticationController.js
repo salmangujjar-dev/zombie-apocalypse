@@ -1,6 +1,5 @@
 const express = require("express");
 const multer = require("multer");
-const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 
 const { Survivors } = require("../models/survivors");
@@ -8,7 +7,6 @@ const { checkUsernameExists } = require("./middlewares");
 
 const router = express.Router();
 const upload = multer();
-const jsonParser = bodyParser.json();
 
 router.post(
   "/signup",
@@ -29,7 +27,7 @@ router.post(
   }
 );
 
-router.post("/login", jsonParser, async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
