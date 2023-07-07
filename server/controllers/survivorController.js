@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const multer = require("multer");
 
 const { verifyToken } = require("./middlewares");
@@ -7,9 +6,8 @@ const { Survivors } = require("../models/survivors");
 
 const router = express.Router();
 const upload = multer();
-const jsonParser = bodyParser.json();
 
-router.get("/", jsonParser, verifyToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const { _id, input, inventory } = req.query;
     let result = null;
@@ -23,9 +21,12 @@ router.get("/", jsonParser, verifyToken, async (req, res) => {
         "_id name username profile_image"
       ).limit(10);
     } else {
+      const inventoryConditions = inventory.map(({ item, quantity }) => {
+        return { resources: { $elemMatch: { item, quantity } } };
+      });
       result = await Survivors.find(
         {
-          resources: { $elemMatch: { $and: inventory } },
+          $and: inventoryConditions,
           _id: { $ne: { _id } },
           role: "survivor",
         },
@@ -132,7 +133,7 @@ router.get("/report", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/:id", jsonParser, verifyToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const _id = req.params.id;
     const survivor = await Survivors.findOne({ _id }, { password: 0 }).populate(
@@ -161,7 +162,7 @@ router.get("/:id", jsonParser, verifyToken, async (req, res) => {
   }
 });
 
-router.put("/report", jsonParser, verifyToken, async (req, res) => {
+router.put("/report", verifyToken, async (req, res) => {
   try {
     const { victimId, targetId } = req.body;
 
@@ -191,7 +192,7 @@ router.put("/report", jsonParser, verifyToken, async (req, res) => {
       res.status(200).json({ message: "Reported survivor Successfully!" });
     } else {
       res
-        .status(400)
+        .status(409)
         .json({ message: "You have already reported this survivor!" });
     }
   } catch (err) {
