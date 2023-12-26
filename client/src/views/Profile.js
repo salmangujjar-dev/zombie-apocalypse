@@ -92,7 +92,7 @@ const Profile = () => {
       setTimeout(() => {
         window.location.reload();
       }, 2000);
-    } catch (err) {}
+    } catch (err) { }
   };
 
   useEffect(() => {
@@ -227,7 +227,7 @@ const Profile = () => {
                   <Button
                     variant="contained"
                     onClick={toggleOpen}
-                    disabled=
+                    disabled={auth?.role === 'admin'}
                   >
                     View Inventory
                   </Button>
