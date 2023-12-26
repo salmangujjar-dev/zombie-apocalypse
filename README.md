@@ -1,3 +1,7 @@
+# Deployed on Vercel
+
+[Vercel Link](https://zombie-apocalypse-front.vercel.app/)
+
 # Project Description
 
 `In a post-apocalyptic world overrun by zombies, the project revolves around the development of a robust system by the last coding-savvy survivor. The system's goal is to connect and assist remaining humans, detecting infections and facilitating resource sharing. Key functionalities include survivor database management, location updates, profile picture additions, and infection flagging based on reports. Strict rules govern infected survivors' limitations. Inventory management ensures accurate data, allowing trade as the sole means of updating belongings. The system incorporates a search feature, trade mechanism with a defined point system, and a comprehensive trade history. Reports provide crucial statistics on infection percentages, resource averages, and points lost. The project also defines distinct roles, restricting certain functionalities for administrators and survivors.`
