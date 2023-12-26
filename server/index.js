@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "*",
   })
 );
 
@@ -23,7 +23,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .catch((err) => {});
+  .catch((err) => { });
 
 app.use(bodyParser.json());
 app.use("/api/v1/authentication", authenticationController);

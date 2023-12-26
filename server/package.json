@@ -1,22 +1,14 @@
 {
-  "name": "trainee-test-project",
+  "name": "zombie-apocalypse",
   "version": "1.0.0",
-  "description": "MERN Test Project",
+  "description": "Zombie Apocalypse Project",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/isalmanahmed/Trainee-Test-Project.git"
-  },
   "author": "Salman Ahmed",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/isalmanahmed/Trainee-Test-Project/issues"
-  },
-  "homepage": "https://github.com/isalmanahmed/Trainee-Test-Project#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
