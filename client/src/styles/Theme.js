@@ -1,10 +1,10 @@
 import { createTheme } from "@mui/material/styles";
-import { indigo } from "@mui/material/colors";
+import { purple } from "@mui/material/colors";
 
 export const theme = createTheme({
   palette: {
     primary: {
-      main: indigo[700],
+      main: purple[700],
       dark: "#2e85d4",
     },
   },
@@ -16,7 +16,7 @@ export const theme = createTheme({
           fontWeight: "bold",
           "&:hover": {
             background: "#fff",
-            color: indigo[700],
+            color: purple[700],
           },
         },
       },
@@ -29,11 +29,11 @@ export const theme = createTheme({
           },
           "& .MuiOutlinedInput-root": {
             "&.Mui-focused fieldset": {
-              borderColor: indigo[700],
+              borderColor: purple[700],
               borderSize: 2,
             },
             "&:hover fieldset": {
-              borderColor: indigo[700],
+              borderColor: purple[700],
             },
           },
         },
@@ -54,7 +54,7 @@ export const theme = createTheme({
       styleOverrides: {
         customRoot: {
           padding: "10px",
-          backgroundColor: indigo[700],
+          backgroundColor: purple[700],
           color: "#fff",
           fontWeight: "bold",
         },

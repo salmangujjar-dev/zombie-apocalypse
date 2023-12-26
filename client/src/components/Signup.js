@@ -127,14 +127,14 @@ const Login = ({ setShowLogin }) => {
       try {
         const response = await axios.get(process.env.REACT_APP_INVENTORY_API);
         setInventory(response.data.updatedInventory);
-      } catch (err) {}
+      } catch (err) { }
     };
 
     fetchData();
   }, []);
 
   return (
-    <>
+    <div className="bg-light d-flex flex-column justify-content-center align-items-center p-5 rounded">
       <ToastContainer
         position="top-center"
         theme="dark"
@@ -359,7 +359,7 @@ const Login = ({ setShowLogin }) => {
           Login
         </Typography>
       </Typography>
-    </>
+    </div>
   );
 };
 

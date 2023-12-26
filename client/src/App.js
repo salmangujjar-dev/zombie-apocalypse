@@ -30,7 +30,7 @@ function App() {
           );
           setAuth(response.data.survivor);
           navigate("/home");
-        } catch (error) {}
+        } catch (error) { }
       }
       setIsAuthenticating(false);
     };
@@ -44,7 +44,7 @@ function App() {
       {isAuthenticating ? (
         <Loader />
       ) : (
-        <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
+        <Container className="d-flex flex-column justify-content-center align-items-center min-vh-100">
           {showLogin ? (
             <Login setShowLogin={setShowLogin} />
           ) : (
