@@ -227,6 +227,7 @@ const Profile = () => {
                   <Button
                     variant="contained"
                     onClick={toggleOpen}
+                    disabled=
                   >
                     View Inventory
                   </Button>
