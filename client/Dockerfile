@@ -1,8 +1,8 @@
 FROM node:18-alpine
 
-RUN mkdir -p /Documents/trainee-test-project/client
+RUN mkdir -p /apps/zombie-apocalypse/client
 
-WORKDIR /Documents/trainee-test-project/client
+WORKDIR /apps/zombie-apocalypse/client
 
 COPY package.json .
 
