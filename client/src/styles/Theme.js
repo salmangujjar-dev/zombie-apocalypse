@@ -1,10 +1,10 @@
 import { createTheme } from "@mui/material/styles";
-import { yellow } from "@mui/material/colors";
+import { yellow, gray } from "@mui/material/colors";
 
 export const theme = createTheme({
   palette: {
     primary: {
-      main: yellow[700],
+      main: gray[700],
       dark: "#2e85d4",
     },
   },
@@ -16,7 +16,7 @@ export const theme = createTheme({
           fontWeight: "bold",
           "&:hover": {
             background: "#fff",
-            color: yellow[700],
+            color: gray[700],
           },
         },
       },
@@ -29,11 +29,11 @@ export const theme = createTheme({
           },
           "& .MuiOutlinedInput-root": {
             "&.Mui-focused fieldset": {
-              borderColor: yellow[700],
+              borderColor: gray[700],
               borderSize: 2,
             },
             "&:hover fieldset": {
-              borderColor: yellow[700],
+              borderColor: gray[700],
             },
           },
         },
@@ -54,7 +54,7 @@ export const theme = createTheme({
       styleOverrides: {
         customRoot: {
           padding: "10px",
-          backgroundColor: yellow[700],
+          backgroundColor: gray[700],
           color: "#fff",
           fontWeight: "bold",
         },
